@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../../../../../../../:\Ahsan Jaleed\SSI\DS_GROUP\PocketFactory__ML-Group\Work\Matias_Data_Analysis\master-pfml_engine\pf_ml_engine\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
