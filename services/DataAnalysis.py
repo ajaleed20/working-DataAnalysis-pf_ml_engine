@@ -7,6 +7,7 @@ import config
 
 
 def analysis_to_file(res_df,mp_ids,iter_num):
+
     string_ints = [str(int) for int in mp_ids]
     str_of_mpids = "_".join(string_ints)
     res_df.to_csv('DataAnalysis/'+ data_analysis.Filename_Analysis.value + '_mpid_' + str_of_mpids + '_iteration' + str(iter_num) + '.csv', index = False, header=True)
@@ -20,15 +21,15 @@ def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, iter_num,
         res_df = pd.merge(res_df, df, on='ts', how='outer')
 
     res_df.sort_values(by=['ts'], inplace=True)
-    res_df = res_df.drop_duplicates().reset_index(drop=True)
 
-    res_df = res_df.fillna(method='ffill')
-
-    res_df.dropna(inplace= True)
+    for i in range(1,len(res_df.columns)-1):
+        res_df['diff_FlowValve008_1492 - ' + str(res_df.columns[i + 1])] = res_df[res_df.columns[1]] - res_df[res_df.columns[i + 1]]
 
     analysis_to_file(res_df,mp_ids,iter_num)
 
     return res_df, missing_mp_ids
+
+
 
 def execute_data_analysis(mpid_var, start_period, end_period,granularity_level,iter_num):
      data, missing_ids = get_mp_data_data_analysis(start_period, end_period, mpid_var, granularity_level,iter_num)
