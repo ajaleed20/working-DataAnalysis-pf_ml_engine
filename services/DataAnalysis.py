@@ -7,7 +7,6 @@ import config
 from matplotlib import pyplot as plt
 import seaborn as sns
 
-
 def analysis_to_file(res_df,mp_ids,iter_num):
     string_ints = [str(int) for int in mp_ids]
     str_of_mpids = "_".join(string_ints)
