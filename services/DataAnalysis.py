@@ -4,13 +4,26 @@ from services.helper_service import get_mp_data, get_freq_by_level
 from services import data_service
 import pandas as pd
 import config
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 
 def analysis_to_file(res_df,mp_ids,iter_num):
-
     string_ints = [str(int) for int in mp_ids]
     str_of_mpids = "_".join(string_ints)
     res_df.to_csv('DataAnalysis/'+ data_analysis.Filename_Analysis.value + '_mpid_' + str_of_mpids + '_iteration' + str(iter_num) + '.csv', index = False, header=True)
+
+def plot_data_analysis_graphs(df,iter):
+    for i in range(1, len(df.columns)):
+        res_df_ts = df['ts'].values
+        res_df_data = df[df.columns[i]]
+        plt.plot(res_df_ts, res_df_data, 'r')
+        plt.xlabel('ts')
+        plt.ylabel(str(df.columns[i]))
+        plt.title('Historic Data')
+        plt.savefig('Graphs_DataAnalysis/' + 'Analysis_Historic Data_' + 'mp_id_' + str(df.columns[i]) + ' _iteration' + str(iter))
+        plt.show()
+
 
 def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, iter_num, include_missing_mp= False):
     dfs, missing_mp_ids = data_service.get_data_by_ids_period_and_level(start_period, end_period, mp_ids,
@@ -22,13 +35,18 @@ def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, iter_num,
 
     res_df.sort_values(by=['ts'], inplace=True)
 
+    res_df = res_df.drop_duplicates().reset_index(drop=True)
+    res_df = res_df.fillna(method='ffill')
+    res_df.dropna(inplace=True)
+
+    plot_data_analysis_graphs(res_df,iter_num)
+
     for i in range(1,len(res_df.columns)-1):
         res_df['diff_FlowValve008_1492 - ' + str(res_df.columns[i + 1])] = res_df[res_df.columns[1]] - res_df[res_df.columns[i + 1]]
 
     analysis_to_file(res_df,mp_ids,iter_num)
 
     return res_df, missing_mp_ids
-
 
 
 def execute_data_analysis(mpid_var, start_period, end_period,granularity_level,iter_num):
