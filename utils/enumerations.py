@@ -63,16 +63,19 @@ class GanualityLevel(enum.Enum):
     three_hour = 5,
     one_day = 6,
     one_week = 7,
+    one_min = 8,
 
 
 
 class data_analysis(enum.Enum):
-    measuringpoint_var = [1491,1492]  # Measuring Point Ids of dependent variables
-    start_period = '11-08-2020T05:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    end_period = '11-11-2020T05:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    measuringpoint_var = [1492, 1491, 1493]
+    #measuringpoint_var = [1492,1461,1486,1488,1490,1463,1524,1476]  # Measuring Point Ids of dependent variables
+    start_period = '12-14-2020T05:22:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    end_period = '12-15-2020T05:26:00'  # 'mm-dd-yyyyTHH:MM:SS'
     Filename_Analysis = 'DataAnalysis'
-    granularity = 1
+    granularity = 2
     instance = 'hbc'
-    iteration_num = 1
+    iteration_num = 2
+    threshold = 200
 
 

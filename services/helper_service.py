@@ -349,8 +349,12 @@ def get_freq_by_level(ganuality_level_value):
         return '10080T'
     elif GanualityLevel.ten_min.value[0] == ganuality_level_value:
         return '10T'
+    elif GanualityLevel.one_min.value[0] == ganuality_level_value:
+        return '1T'
     elif GanualityLevel.thirty_sec.value == ganuality_level_value:
         return '0.5T'
+    elif GanualityLevel.one_sec.value == ganuality_level_value:
+        return '0.016666666667T'
 
 
 def remove_skewness_and_normalize(data, skew_transformers, normalizer, cols):

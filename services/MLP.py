@@ -380,18 +380,18 @@ def execute_mlp(dependent_var, independent_var, start_period, end_period, lag_ti
         plot_forecast(original_data, str(independent_var[0]), forecast, ganaulity_level, lead_time_steps, iteration, rmse_list)
 
 
-dependent_var = [1491] # Measuring Point Ids of dependent variables
-independent_var = [] # Measuring Point Ids of Independent variable i.e. target variable
-start_period = '11-01-2020T05:00' #'mm-dd-yyyyTHH:MM'
-end_period = '11-03-2020T05:00' #'mm-dd-yyyyTHH:MM'
+dependent_var = [1492] # Measuring Point Ids of dependent variables
+independent_var = [1491,1493] # Measuring Point Ids of Independent variable i.e. target variable
+start_period = '11-09-2020T05:00' #'mm-dd-yyyyTHH:MM'
+end_period = '11-15-2020T05:00' #'mm-dd-yyyyTHH:MM'
 lag_time_steps = 200
 lead_time_steps = 100
-ganaulity_level = 6  # 3 for 10 mins, 4 for hour, 6 for days, 7 for weeks
+ganaulity_level = 3  # 3 for 10 mins, 4 for hour, 6 for days, 7 for weeks
 test_train_split_size = 0.3
 iteration = 3 #for each iteration unique graph file are saved
 normalize_data = True
 confidence_interval_multiple_factor = 1
-algorithm = 'CNN' # MLP for multi layer preceptron, CNN for convolutional neural network
+algorithm = 'MLP' # MLP for multi layer preceptron, CNN for convolutional neural network
 instance = 'hbc'
 
 config_oauth(config.get_current_config())
