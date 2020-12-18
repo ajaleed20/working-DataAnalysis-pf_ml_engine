@@ -14,6 +14,7 @@ def analysis_to_file(res_df,mp_ids,iter_num):
     res_df.to_csv('DataAnalysis/'+ data_analysis.Filename_Analysis.value + '_mpid_' + str_of_mpids + '_iteration' + str(iter_num) + '.csv', index = False, header=True)
 
 def plot_data_analysis_graphs(df,iter):
+    degrees = 70
     for i in range(1, len(df.columns)):
         res_df_ts = df['ts'].values
         res_df_data = df[df.columns[i]]
@@ -21,6 +22,7 @@ def plot_data_analysis_graphs(df,iter):
         plt.xlabel('ts')
         plt.ylabel(str(df.columns[i]))
         plt.title('Historic Data')
+        plt.xticks(rotation=degrees)
         plt.savefig('Graphs_DataAnalysis/' + 'Analysis_Historic Data_' + 'mp_id_' + str(df.columns[i]) + ' _iteration' + str(iter))
         plt.show()
 
@@ -33,9 +35,9 @@ def plot_data_analysis_graphs(df,iter):
         plt.title('A plot to show the correlation between_' + str(df.columns[1]) + '_and_' + str(df.columns[i]))
         plt.xlabel(str(df.columns[1]))
         plt.ylabel(str(df.columns[i]))
-        plt.plot(np.unique(x), np.poly1d(np.polyfit(x, y, 1))(np.unique(x)), color='yellow')
+        plt.plot(np.unique(x), np.poly1d(np.polyfit(x, y, 1))(np.unique(x)), color='red')
+        plt.xticks(rotation=degrees)
         plt.savefig('Graphs_DataAnalysis/' + 'Analysis_Correlated_Data_' + 'mp_id_' + str(df.columns[1]) + '_' + str(df.columns[i]) + ' _iteration' + str(iter))
-
         plt.show()
 
 
