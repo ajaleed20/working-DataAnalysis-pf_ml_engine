@@ -30,7 +30,7 @@ def plot_data_analysis_graphs(df,iter):
         print(np.corrcoef(x, y))
 
         plt.scatter(x, y)
-        plt.title('A plot to show the correlation between' + str(df.columns[1]) and str(df.columns[i]))
+        plt.title('A plot to show the correlation between_' + str(df.columns[1]) + '_and_' + str(df.columns[i]))
         plt.xlabel(str(df.columns[1]))
         plt.ylabel(str(df.columns[i]))
         plt.plot(np.unique(x), np.poly1d(np.polyfit(x, y, 1))(np.unique(x)), color='yellow')
