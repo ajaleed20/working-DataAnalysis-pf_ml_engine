@@ -4,6 +4,7 @@ from services.helper_service import get_mp_data, get_freq_by_level
 from services import data_service
 import pandas as pd
 import config
+import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 
@@ -22,6 +23,21 @@ def plot_data_analysis_graphs(df,iter):
         plt.title('Historic Data')
         plt.savefig('Graphs_DataAnalysis/' + 'Analysis_Historic Data_' + 'mp_id_' + str(df.columns[i]) + ' _iteration' + str(iter))
         plt.show()
+
+    for i in range(2, len(df.columns)):
+        x = df[df.columns[1]]
+        y = df[df.columns[i]]
+        print(np.corrcoef(x, y))
+
+        plt.scatter(x, y)
+        plt.title('A plot to show the correlation between' + str(df.columns[1]) and str(df.columns[i]))
+        plt.xlabel(str(df.columns[1]))
+        plt.ylabel(str(df.columns[i]))
+        plt.plot(np.unique(x), np.poly1d(np.polyfit(x, y, 1))(np.unique(x)), color='yellow')
+        plt.savefig('Graphs_DataAnalysis/' + 'Analysis_Correlated_Data_' + 'mp_id_' + str(df.columns[1]) + '_' + str(df.columns[i]) + ' _iteration' + str(iter))
+
+        plt.show()
+
 
 
 def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, iter_num, include_missing_mp= False):
