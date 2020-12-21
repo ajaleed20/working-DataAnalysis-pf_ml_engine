@@ -13,16 +13,28 @@ def analysis_to_file(res_df,mp_ids,iter_num):
     str_of_mpids = "_".join(string_ints)
     res_df.to_csv('DataAnalysis/'+ data_analysis.Filename_Analysis.value + '_mpid_' + str_of_mpids + '_iteration' + str(iter_num) + '.csv', index = False, header=True)
 
+
+def threshold_diff(df,mpid):
+    #
+    # mpid_len = len(mpid)
+    #
+    # for i in range(mpid_len+1, len(df.columns)):
+    #     #df[(df > threshold).any(1)]
+    #     df_filter = df[(df > 250).any(1)]
+
 def plot_data_analysis_graphs(df,iter):
+
     degrees = 70
     for i in range(1, len(df.columns)):
         res_df_ts = df['ts'].values
         res_df_data = df[df.columns[i]]
+        plt.figure(figsize=(22, 22))
         plt.plot(res_df_ts, res_df_data, 'r')
-        plt.xlabel('ts')
-        plt.ylabel(str(df.columns[i]))
-        plt.title('Historic Data')
-        plt.xticks(rotation=degrees)
+        plt.xlabel('ts',fontsize=24,fontweight="bold")
+        plt.ylabel(str(df.columns[i]),fontsize=24,fontweight="bold")
+        plt.title('Historic Data for '+ str(df.columns[i]), fontsize=24,fontweight="bold")
+        plt.xticks(rotation=degrees,weight = 'bold',fontsize=20)
+        plt.yticks(weight = 'bold',fontsize=20)
         plt.savefig('Graphs_DataAnalysis/' + 'Analysis_Historic Data_' + 'mp_id_' + str(df.columns[i]) + ' _iteration' + str(iter))
         plt.show()
 
@@ -30,15 +42,19 @@ def plot_data_analysis_graphs(df,iter):
         x = df[df.columns[1]]
         y = df[df.columns[i]]
         print(np.corrcoef(x, y))
-
+        plt.figure(figsize=(22, 22))
         plt.scatter(x, y)
-        plt.title('A plot to show the correlation between_' + str(df.columns[1]) + '_and_' + str(df.columns[i]))
-        plt.xlabel(str(df.columns[1]))
-        plt.ylabel(str(df.columns[i]))
+        plt.title('A plot to show the correlation between_' + str(df.columns[1]) + '_and_' + str(df.columns[i]),fontsize=24,fontweight="bold")
+        plt.xlabel(str(df.columns[1]),fontsize=24,fontweight="bold")
+        plt.ylabel(str(df.columns[i]),fontsize=24,fontweight="bold")
         plt.plot(np.unique(x), np.poly1d(np.polyfit(x, y, 1))(np.unique(x)), color='red')
-        plt.xticks(rotation=degrees)
+        plt.xticks(rotation=degrees, weight = 'bold',fontsize=20)
+        plt.yticks(weight = 'bold',fontsize=20)
+        #plt.figure(figsize=(10,10))
         plt.savefig('Graphs_DataAnalysis/' + 'Analysis_Correlated_Data_' + 'mp_id_' + str(df.columns[1]) + '_' + str(df.columns[i]) + ' _iteration' + str(iter))
         plt.show()
+
+
 
 
 
@@ -61,7 +77,10 @@ def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, iter_num,
     for i in range(1,len(res_df.columns)-1):
         res_df['diff_FlowValve008_1492 - ' + str(res_df.columns[i + 1])] = res_df[res_df.columns[1]] - res_df[res_df.columns[i + 1]]
 
+
     analysis_to_file(res_df,mp_ids,iter_num)
+
+    threshold_diff(res_df,mp_ids)
 
     return res_df, missing_mp_ids
 
