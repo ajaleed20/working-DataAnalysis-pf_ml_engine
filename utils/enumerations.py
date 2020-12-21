@@ -75,7 +75,7 @@ class data_analysis(enum.Enum):
     Filename_Analysis = 'DataAnalysis'
     granularity = 1
     instance = 'hbc'
-    iteration_num = 1
+    iteration_num = 2
     threshold = 200
 
 
