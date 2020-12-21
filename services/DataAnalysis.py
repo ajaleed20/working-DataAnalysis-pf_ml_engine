@@ -14,13 +14,15 @@ def analysis_to_file(res_df,mp_ids,iter_num):
     res_df.to_csv('DataAnalysis/'+ data_analysis.Filename_Analysis.value + '_mpid_' + str_of_mpids + '_iteration' + str(iter_num) + '.csv', index = False, header=True)
 
 
-def threshold_diff(df,mpid):
-    #
-    # mpid_len = len(mpid)
-    #
-    # for i in range(mpid_len+1, len(df.columns)):
-    #     #df[(df > threshold).any(1)]
-    #     df_filter = df[(df > 250).any(1)]
+def threshold_diff(df,mpid,iter_num):
+    mpid_len = len(mpid)
+    dfs = []
+    for i in range(mpid_len+1, len(df.columns)):
+        df_filter = df.loc[abs(df[df.columns[i]]) > data_analysis.threshold.value]
+        df_filter.to_csv('DataAnalysis/' + data_analysis.Filename_Threshold.value + str(i) +' ' + str(iter_num) + '.csv', index=False, header=True)
+        print(df_filter)
+
+    #df.loc[df['shield'] > 6]
 
 def plot_data_analysis_graphs(df,iter):
 
@@ -80,7 +82,7 @@ def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, iter_num,
 
     analysis_to_file(res_df,mp_ids,iter_num)
 
-    threshold_diff(res_df,mp_ids)
+    threshold_diff(res_df,mp_ids,iter_num)
 
     return res_df, missing_mp_ids
 
