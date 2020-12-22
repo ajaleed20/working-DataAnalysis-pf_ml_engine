@@ -15,14 +15,12 @@ def analysis_to_file(res_df,mp_ids,iter_num):
 
 
 def threshold_diff(df,mpid,iter_num):
-    mpid_len = len(mpid)
-    dfs = []
-    for i in range(mpid_len+1, len(df.columns)):
-        df_filter = df.loc[abs(df[df.columns[i]]) > data_analysis.threshold.value]
-        df_filter.to_csv('DataAnalysis/' + data_analysis.Filename_Threshold.value + str(i) +'th_col_' + '_iter_'+str(iter_num) + '.csv', index=False, header=True)
-        print(df_filter)
-
-    #df.loc[df['shield'] > 6]
+    for threshold in data_analysis.thresholds.value:
+        for i in range(len(mpid)+1, len(df.columns)):
+            df_filter = df.loc[abs(df[df.columns[i]]) > threshold]
+            if(df_filter.shape[0] >  0):
+                df_filter.to_csv('DataAnalysis/' + data_analysis.Filename_Threshold.value + '_threshold_'+ str(threshold)
+                                 +'_for_'+df.columns[i]+'_iteration_'+str(iter_num) + '.csv', index=False, header=True)
 
 def plot_data_analysis_graphs(df,iter):
 
@@ -84,11 +82,9 @@ def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, iter_num,
 
     threshold_diff(res_df,mp_ids,iter_num)
 
-    return res_df, missing_mp_ids
-
 
 def execute_data_analysis(mpid_var, start_period, end_period,granularity_level,iter_num):
-     data, missing_ids = get_mp_data_data_analysis(start_period, end_period, mpid_var, granularity_level,iter_num)
+   get_mp_data_data_analysis(start_period, end_period, mpid_var, granularity_level,iter_num)
 
 
 instance = data_analysis.instance.value
