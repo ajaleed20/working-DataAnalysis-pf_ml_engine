@@ -19,7 +19,7 @@ def threshold_diff(df,mpid,iter_num):
     dfs = []
     for i in range(mpid_len+1, len(df.columns)):
         df_filter = df.loc[abs(df[df.columns[i]]) > data_analysis.threshold.value]
-        df_filter.to_csv('DataAnalysis/' + data_analysis.Filename_Threshold.value + str(i) +' ' + str(iter_num) + '.csv', index=False, header=True)
+        df_filter.to_csv('DataAnalysis/' + data_analysis.Filename_Threshold.value + str(i) +'th_col_' + '_iter_'+str(iter_num) + '.csv', index=False, header=True)
         print(df_filter)
 
     #df.loc[df['shield'] > 6]
