@@ -74,10 +74,9 @@ class data_analysis(enum.Enum):
     end_period = '11-11-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     Filename_Analysis = 'DataAnalysis'
     Filename_Threshold = 'Data_Above_Threshold'
-    granularity = 6
+    granularity = 1
     instance = 'hbc'
     iteration_num = 2
-    threshold = 300
     thresholds = [300, 200, 100]
 
 
