@@ -27,6 +27,7 @@ def threshold_diff(df,mpid,iter_num):
 
 def get_stumpy(df,num):
     days_dict = {
+        "Half-Hour": 60,
         "One-Hour": 120,
         "3-Hour"  : 360,
         "6-Hour"  : 720,
@@ -49,7 +50,7 @@ def get_stumpy(df,num):
 
 
     #-----------------------------------------------------------------------------
-    m = days_dict['3-Hour']
+    m = days_dict['Half-Hour']
     mp = stumpy.stump(df[df.columns[1]], m)
     fig, axs = plt.subplots(2, sharex=True, gridspec_kw={'hspace': 0})
     plt.suptitle('Motif (Pattern) Discovery', fontsize='30')
@@ -67,6 +68,29 @@ def get_stumpy(df,num):
     axs[1].plot(mp[:, 0])
     plt.show()
     print(mp[:, 0].min())
+
+#--------------------stump with varying window size--------------
+    DAY_MULTIPLIER = 1
+    x_axis_labels = df[(df.ts.dt.hour == 0)]['ts'].dt.strftime('%b %d').values[::DAY_MULTIPLIER]
+    x_axis_labels[1::2] = " "
+    x_axis_labels, DAY_MULTIPLIER
+    days_df = pd.DataFrame.from_dict(days_dict, orient='index', columns=['m'])
+    days_df.head()
+
+    fig, axs = plt.subplots(len(days_df), sharex=True, gridspec_kw={'hspace': 0})
+    fig.text(0.5, -0.1, 'Subsequence Start Date', ha='center', fontsize='20')
+    fig.text(0.08, 0.5, 'Matrix Profile', va='center', rotation='vertical', fontsize='20')
+    for i, varying_m in enumerate(days_df['m'].values):
+        mp = stumpy.stump(df[df.columns[1]], varying_m)
+        axs[i].plot(mp[:, 0])
+        axs[i].set_ylim(0, 9.5)
+        axs[i].set_xlim(0, 3600)
+        title = f"m = {varying_m}"
+        axs[i].set_title(title, fontsize=20, y=.5)
+    plt.xticks(np.arange(0, df.shape[0], (48 * DAY_MULTIPLIER) / 2), x_axis_labels)
+    plt.xticks(rotation=75)
+    plt.suptitle('STUMP with Varying Window Sizes', fontsize='10')
+    plt.show()
 
 
 
