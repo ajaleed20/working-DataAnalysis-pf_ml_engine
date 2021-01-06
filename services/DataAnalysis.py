@@ -27,17 +27,18 @@ def threshold_diff(df,mpid,iter_num):
 
 def get_stumpy(df,num):
     days_dict = {
+        "Three-min": 6,
+        "Five-min": 10,
+        "Ten-min": 20,
+        "Fifteen-min": 30,
+        "Twenty-min": 40,
         "Half-Hour": 60,
-        "One-Hour": 120,
+        "1-Hour": 120,
+        "2-Hour": 240,
         "3-Hour"  : 360,
         "6-Hour"  : 720,
         "9-Hour"  : 1080,
         "12-Hour" : 1440,
-        #"Half-Day": 24,
-        "1-Day"   : 2880,
-        #"2-Days": 96,
-        #"5-Days": 240,
-        #"7-Days": 336,
     }
     # m = 120
     # mp = stumpy.stump(df[df.columns[1]], m)
@@ -68,26 +69,31 @@ def get_stumpy(df,num):
     axs[1].plot(mp[:, 0])
     plt.show()
     print(mp[:, 0].min())
+    print(mp[:,0].max())
 
 #--------------------stump with varying window size--------------
     DAY_MULTIPLIER = 1
     x_axis_labels = df[(df.ts.dt.hour == 0)]['ts'].dt.strftime('%b %d').values[::DAY_MULTIPLIER]
+    x_axis_labels = np.unique(x_axis_labels)
     x_axis_labels[1::2] = " "
     x_axis_labels, DAY_MULTIPLIER
     days_df = pd.DataFrame.from_dict(days_dict, orient='index', columns=['m'])
     days_df.head()
 
     fig, axs = plt.subplots(len(days_df), sharex=True, gridspec_kw={'hspace': 0})
-    fig.text(0.5, -0.1, 'Subsequence Start Date', ha='center', fontsize='20')
-    fig.text(0.08, 0.5, 'Matrix Profile', va='center', rotation='vertical', fontsize='20')
+    fig.text(0.5, -0.1, 'Subsequence Start Date', ha='center', fontsize='10')
+    fig.text(0.08, 0.5, 'Matrix Profile', va='center', rotation='vertical', fontsize='10')
     for i, varying_m in enumerate(days_df['m'].values):
         mp = stumpy.stump(df[df.columns[1]], varying_m)
         axs[i].plot(mp[:, 0])
+
         axs[i].set_ylim(0, 9.5)
         axs[i].set_xlim(0, 3600)
         title = f"m = {varying_m}"
-        axs[i].set_title(title, fontsize=20, y=.5)
-    plt.xticks(np.arange(0, df.shape[0], (48 * DAY_MULTIPLIER) / 2), x_axis_labels)
+        axs[i].set_title(title, fontsize=10, y=.5)
+
+    plt.xticks(np.arange(0, df.shape[0], 150.0))
+    #plt.xticks(np.arange(0, df.shape[0], (48 * DAY_MULTIPLIER) / 2), x_axis_labels)
     plt.xticks(rotation=75)
     plt.suptitle('STUMP with Varying Window Sizes', fontsize='10')
     plt.show()
@@ -136,6 +142,8 @@ def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, iter_num,
     dfs, missing_mp_ids = data_service.get_data_by_ids_period_and_level(start_period, end_period, mp_ids,
                                                                                       level, include_missing_mp)
     res_df = pd.DataFrame({'ts': pd.date_range(start=start_period, end=end_period, freq=get_freq_by_level(level))})
+
+    res_df['ts'] = res_df['ts'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
 
     for df in dfs:
         res_df = pd.merge(res_df, df, on='ts', how='outer')
