@@ -71,7 +71,7 @@ class data_analysis(enum.Enum):
     measuringpoint_var = [1492]
     #measuringpoint_var = [1492,1461,1486,1488,1490,1463,1524,1476]  # Measuring Point Ids of dependent variables
     start_period = '10-15-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    end_period = '11-15-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    end_period = '10-25-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     Filename_Analysis = 'DataAnalysis'
     Filename_Threshold = 'Data_Above_Threshold'
     granularity = 2

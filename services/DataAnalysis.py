@@ -26,6 +26,10 @@ def threshold_diff(df,mpid,iter_num):
 
 
 def get_stumpy(df,num):
+    df[df.columns[1]] = df[df.columns[1]].replace(0, np.nan)
+    df[df.columns[1]] = df[df.columns[1]].fillna(method='ffill')
+    df[df.columns[1]].dropna(inplace=True)
+
     days_dict = {
         "Three-min": 6,
         "Five-min": 10,
@@ -33,12 +37,12 @@ def get_stumpy(df,num):
         "Fifteen-min": 30,
         "Twenty-min": 40,
         "Half-Hour": 60,
-        "1-Hour": 120,
-        "2-Hour": 240,
-        "3-Hour"  : 360,
-        "6-Hour"  : 720,
-        "9-Hour"  : 1080,
-        "12-Hour" : 1440,
+        # "1-Hour": 120,
+        # "2-Hour": 240,
+        # "3-Hour"  : 360,
+        # "6-Hour"  : 720,
+        # "9-Hour"  : 1080,
+        # "12-Hour" : 1440,
     }
     # m = 120
     # mp = stumpy.stump(df[df.columns[1]], m)
@@ -51,10 +55,13 @@ def get_stumpy(df,num):
 
 
     #-----------------------------------------------------------------------------
-    m = days_dict['Half-Hour']
+    m = days_dict['Fifteen-min']
     mp = stumpy.stump(df[df.columns[1]], m)
+    mp = mp[mp[:, 1].argsort()]
+    #mp.sort_values(by=['1'], inplace=True)
+
     fig, axs = plt.subplots(2, sharex=True, gridspec_kw={'hspace': 0})
-    plt.suptitle('Motif (Pattern) Discovery', fontsize='30')
+    plt.suptitle('Motif (Pattern) Discovery', fontsize='20')
 
     axs[0].plot(df[df.columns[1]])
     axs[0].set_ylabel('Flow Valve 008', fontsize='08')
@@ -62,14 +69,23 @@ def get_stumpy(df,num):
     #axs[0].add_patch(rect)
     #rect = Rectangle((8724, 0), m, 40, facecolor='lightgrey')
     #axs[0].add_patch(rect)
-    axs[1].set_xlabel('Time', fontsize='20')
-    axs[1].set_ylabel('Matrix Profile', fontsize='08')
+    axs[1].set_xlabel('Time', fontsize='10')
+    axs[1].set_ylabel('Matrix Profile', fontsize='10')
     #axs[1].axvline(x=643, linestyle="dashed")
     #axs[1].axvline(x=8724, linestyle="dashed")
     axs[1].plot(mp[:, 0])
     plt.show()
-    print(mp[:, 0].min())
-    print(mp[:,0].max())
+    a = mp[:, 0]
+
+    max_value_not_zero = min(i for i in a if i > 0)  # min(i for i in a if i > 0)
+    max_index_row = np.where(a == max_value_not_zero)
+    print("Position:",max_index_row )
+    print("Value:", max_value_not_zero)
+
+
+
+    #print(mp[:, 0].min())
+    #print(mp[:,0].max())
 
 #--------------------stump with varying window size--------------
     DAY_MULTIPLIER = 1
@@ -92,7 +108,7 @@ def get_stumpy(df,num):
         title = f"m = {varying_m}"
         axs[i].set_title(title, fontsize=10, y=.5)
 
-    plt.xticks(np.arange(0, df.shape[0], 150.0))
+    plt.xticks(np.arange(0, df.shape[0], 5000.0))
     #plt.xticks(np.arange(0, df.shape[0], (48 * DAY_MULTIPLIER) / 2), x_axis_labels)
     plt.xticks(rotation=75)
     plt.suptitle('STUMP with Varying Window Sizes', fontsize='10')
