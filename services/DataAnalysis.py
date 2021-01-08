@@ -75,33 +75,31 @@ def get_stumpy(df,num):
     print("Value:", min_index_row)
 
     fig, axs = plt.subplots(len(min_index_row)+2, sharex=True, gridspec_kw={'hspace': 0})
-    plt.suptitle('Motif (Pattern) Discovery', fontsize='20')
+    plt.suptitle('Motif (Pattern) Discovery', fontsize='10')
+    axs[0].plot(non_nan_df)
+    axs[0].set_ylabel('Flow Valve 008', fontsize='05')
 
-    color = iter(cm.rainbow(np.linspace(0, 1)))
-    for i in range(len(min_index_row)+1):
-        c = next(color)
-        axs[0].plot(non_nan_df[min_index_row[0][i]:min_index_row[0][i] + m], color=c)
     #axs[0].plot(non_nan_df[min_index_row[0][0]:min_index_row[0][0] + m], color='C1')
     #axs[0].plot(non_nan_df[min_index_row[0][1]:min_index_row[0][1] + m], color='C2')
     #axs[0].plot(non_nan_df[max_index_row[0][1]:max_index_row[0][1] + m], color='C2')
-
-    axs[1].plot(non_nan_df)
-    axs[1].set_ylabel('Flow Valve 008', fontsize='08')
     #rect = Rectangle((643, 0), m, 40, facecolor='lightgrey')
     #axs[0].add_patch(rect)
     #rect = Rectangle((8724, 0), m, 40, facecolor='lightgrey')
     #axs[0].add_patch(rect)
-    axs[2].set_xlabel('Time', fontsize='10')
-    axs[2].set_ylabel('Matrix Profile', fontsize='10')
+    axs[1].set_xlabel('Time', fontsize='05')
+    axs[1].set_ylabel('Matrix Profile', fontsize='05')
     #axs[1].axvline(x=643, linestyle="dashed")
     #axs[1].axvline(x=8724, linestyle="dashed")
-    axs[2].plot(mp[:, 0])
+    axs[1].plot(mp[:, 0])
     #plt.show()
     # axs[3].set_xlabel("Time", fontsize='10')
     # axs[3].set_ylabel("Zoomed ", fontsize='10')
-    # axs[3].plot(non_nan_df[min_index_row[0]:min_index_row[0] + m], color='C1')
-    # axs[3].plot(non_nan_df[min_index_row[1]:min_index_row[1] + m], color='C2')
-    # axs[3].plot(non_nan_df[min_index_row[2]:min_index_row[2] + m], color='C3')
+
+    axs[2].set_ylabel('Motif at global minima', fontsize='05')
+    color = iter(cm.rainbow(np.linspace(0, 1)))
+    for i in range(len(min_index_row) + 1):
+        c = next(color)
+        axs[2].plot(non_nan_df[min_index_row[0][i]:min_index_row[0][i] + m], color=c)
 
     plt.show()
 
