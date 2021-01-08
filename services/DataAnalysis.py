@@ -74,7 +74,7 @@ def get_stumpy(df,num):
     print("Position:", min_index_row)
     print("Value:", min_index_row)
 
-    fig, axs = plt.subplots(2+len(min_index_row)+1, sharex=True, gridspec_kw={'hspace': 0})
+    fig, axs = plt.subplots(len(min_index_row)+2, sharex=True, gridspec_kw={'hspace': 0})
     plt.suptitle('Motif (Pattern) Discovery', fontsize='20')
 
     color = iter(cm.rainbow(np.linspace(0, 1)))
