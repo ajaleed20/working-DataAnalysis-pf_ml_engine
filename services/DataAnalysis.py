@@ -9,6 +9,8 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 import stumpy
 from matplotlib.patches import Rectangle
+from matplotlib.pyplot import cm
+
 
 def analysis_to_file(res_df,mp_ids,iter_num):
     string_ints = [str(int) for int in mp_ids]
@@ -26,9 +28,11 @@ def threshold_diff(df,mpid,iter_num):
 
 
 def get_stumpy(df,num):
+    df[df.columns[1]] = df[df.columns[1]].replace([np.inf, -np.inf], np.nan)
     df[df.columns[1]] = df[df.columns[1]].replace(0, np.nan)
-    df[df.columns[1]] = df[df.columns[1]].fillna(method='ffill')
-    df[df.columns[1]].dropna(inplace=True)
+    non_nan_df = df[df.columns[1]].dropna(inplace=False)
+    df[df.columns[1]] = non_nan_df
+    #non_nan_dfa = df[df.columns[1]][np.logical_not(np.isnan(df[df.columns[1]]))]
 
     days_dict = {
         "Three-min": 6,
@@ -56,14 +60,36 @@ def get_stumpy(df,num):
 
     #-----------------------------------------------------------------------------
     m = days_dict['Fifteen-min']
-    mp = stumpy.stump(df[df.columns[1]], m)
+    mp = stumpy.stump(non_nan_df, m)
+    #mp = stumpy.stump(df[df.columns[1]], m)
     mp = mp[mp[:, 1].argsort()]
-    #mp.sort_values(by=['1'], inplace=True)
+    for index, value in np.ndenumerate(mp[:, 0]):
+        mp[:, 0][index] = np.around(value, 2)
 
-    fig, axs = plt.subplots(2, sharex=True, gridspec_kw={'hspace': 0})
+    a = mp[:, 0]
+    max_value_not_zero = mp[:, 0].min()
+    # max_value_not_zero =   min(i for i in a if i > 0.9)
+    max_index_row = np.where(a == max_value_not_zero)
+    #max_index_row_l = list(max_index_row)
+    print("Position:", max_index_row)
+    print("Value:", max_value_not_zero)
+
+    fig, axs = plt.subplots(2+len(max_index_row)+1, sharex=True, gridspec_kw={'hspace': 0})
     plt.suptitle('Motif (Pattern) Discovery', fontsize='20')
 
-    axs[0].plot(df[df.columns[1]])
+    # color = iter(cm.rainbow(np.linspace(0, 1)))
+    # for i in range(len(max_index_row)+1):
+    #     c = next(color)
+    #     axs[0].plot(non_nan_df[max_index_row[0][i]:max_index_row[0][i] + m], color=c)
+    axs[0].plot(non_nan_df[max_index_row[0][0]:max_index_row[0][0] + m], color='C1')
+    axs[0].plot(non_nan_df[max_index_row[0][1]:max_index_row[0][1] + m], color='C2')
+    #axs[0].plot(non_nan_df[max_index_row[0][1]:max_index_row[0][1] + m], color='C2')
+
+    plt.show()
+
+
+    axs[0].plot(non_nan_df)
+    #axs[0].plot(df[df.columns[1]])
     axs[0].set_ylabel('Flow Valve 008', fontsize='08')
     #rect = Rectangle((643, 0), m, 40, facecolor='lightgrey')
     #axs[0].add_patch(rect)
@@ -74,14 +100,14 @@ def get_stumpy(df,num):
     #axs[1].axvline(x=643, linestyle="dashed")
     #axs[1].axvline(x=8724, linestyle="dashed")
     axs[1].plot(mp[:, 0])
+    #plt.show()
+    axs[2].set_xlabel("Time", fontsize='10')
+    axs[2].set_ylabel("Zoomed ", fontsize='10')
+    axs[2].plot(non_nan_df[max_index_row[0]:max_index_row[0] + m], color='C1')
+    axs[2].plot(non_nan_df[max_index_row[1]:max_index_row[1] + m], color='C2')
+    axs[2].plot(non_nan_df[max_index_row[2]:max_index_row[2] + m], color='C3')
+
     plt.show()
-    a = mp[:, 0]
-
-    max_value_not_zero = min(i for i in a if i > 0)  # min(i for i in a if i > 0)
-    max_index_row = np.where(a == max_value_not_zero)
-    print("Position:",max_index_row )
-    print("Value:", max_value_not_zero)
-
 
 
     #print(mp[:, 0].min())
@@ -100,7 +126,8 @@ def get_stumpy(df,num):
     fig.text(0.5, -0.1, 'Subsequence Start Date', ha='center', fontsize='10')
     fig.text(0.08, 0.5, 'Matrix Profile', va='center', rotation='vertical', fontsize='10')
     for i, varying_m in enumerate(days_df['m'].values):
-        mp = stumpy.stump(df[df.columns[1]], varying_m)
+        mp = stumpy.stump(non_nan_df, varying_m)
+        #mp = stumpy.stump(df[df.columns[1]], varying_m)
         axs[i].plot(mp[:, 0])
 
         axs[i].set_ylim(0, 9.5)
