@@ -28,10 +28,13 @@ def threshold_diff(df,mpid,iter_num):
 
 
 def get_stumpy(df,num):
-    df[df.columns[1]] = df[df.columns[1]].replace([np.inf, -np.inf], np.nan)
-    df[df.columns[1]] = df[df.columns[1]].replace(0, np.nan)
-    non_nan_df = df[df.columns[1]].dropna(inplace=False)
-    df[df.columns[1]] = non_nan_df
+    res_df = df
+    res_df.dropna(inplace=True)
+    res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
+    res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace(0, np.nan)
+    res_df.dropna(inplace=True)
+    #non_nan_df = res_df[res_df.columns[1]].dropna(inplace=True)
+    #res_df[res_df.columns[1]] = non_nan_df
     #non_nan_dfa = df[df.columns[1]][np.logical_not(np.isnan(df[df.columns[1]]))]
 
     days_dict = {
@@ -59,8 +62,8 @@ def get_stumpy(df,num):
 
 
     #-----------------------------------------------------------------------------
-    m = days_dict['Fifteen-min']
-    mp = stumpy.stump(non_nan_df, m)
+    m = days_dict['Half-Hour']
+    mp = stumpy.stump(res_df[res_df.columns[1]], m)
     #mp = stumpy.stump(df[df.columns[1]], m)
     mp = mp[mp[:, 1].argsort()]
     for index, value in np.ndenumerate(mp[:, 0]):
@@ -76,8 +79,15 @@ def get_stumpy(df,num):
 
     fig, axs = plt.subplots(len(min_index_row)+2, sharex=True, gridspec_kw={'hspace': 0})
     plt.suptitle('Motif (Pattern) Discovery', fontsize='10')
-    axs[0].plot(non_nan_df)
+    res_df_ts = res_df['ts'].values
+    res_df_data = res_df[res_df.columns[1]]
+    plt.figure(figsize=(22, 22))
+    #plt.plot(res_df_ts, res_df_data, 'r')
+    #plt.xlabel('ts', fontsize=24, fontweight="bold")
+    plt.ylabel(str(df.columns[1]), fontsize=24, fontweight="bold")
+    axs[0].plot(res_df_data)
     axs[0].set_ylabel('Flow Valve 008', fontsize='05')
+    #plt.show()
 
     #axs[0].plot(non_nan_df[min_index_row[0][0]:min_index_row[0][0] + m], color='C1')
     #axs[0].plot(non_nan_df[min_index_row[0][1]:min_index_row[0][1] + m], color='C2')
@@ -97,9 +107,16 @@ def get_stumpy(df,num):
 
     axs[2].set_ylabel('Motif at global minima', fontsize='05')
     color = iter(cm.rainbow(np.linspace(0, 1)))
-    for i in range(len(min_index_row) + 1):
+    xyz = list(min_index_row[0])
+    for i in range(len(xyz)):
         c = next(color)
-        axs[2].plot(non_nan_df[min_index_row[0][i]:min_index_row[0][i] + m], color=c)
+        axs[2].plot(res_df_data[xyz[i]:xyz[i] + m], color=c)
+
+
+    #
+    # for i in range(len(min_index_row) + 1):
+    #     c = next(color)
+    #     axs[2].plot(res_df_data[min_index_row[0][i]:min_index_row[0][i] + m], color=c)
 
     plt.show()
 
