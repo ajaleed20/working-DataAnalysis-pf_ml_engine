@@ -66,17 +66,18 @@ class GanualityLevel(enum.Enum):
     one_min = 8,
 
 
-
 class data_analysis(enum.Enum):
+    stumpy_measuringpoint_var = [1492]
     measuringpoint_var = [1492, 1491, 1493]
     #measuringpoint_var = [1492,1461,1486,1488,1490,1463,1524,1476]  # Measuring Point Ids of dependent variables
-    start_period = '11-10-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    end_period = '11-11-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    start_period = '11-05-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    end_period = '11-30-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     Filename_Analysis = 'DataAnalysis'
     Filename_Threshold = 'Data_Above_Threshold'
-    granularity = 1
+    granularity = 2
     instance = 'hbc'
     iteration_num = 2
     thresholds = [300, 200, 100]
+
 
 
