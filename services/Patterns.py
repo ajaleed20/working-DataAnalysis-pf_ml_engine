@@ -79,16 +79,6 @@ def get_stumpy_patterns(df):
             plt.savefig('Graphs_Motifs/' + 'Motif_Historic Data_' + str(xyz[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
             plt.show()
 
-    for i in range(len(xyz)):
-        c = next(color)
-        axs_motif[i].plot(res_df_data[xyz[i]:xyz[i] + m])
-
-    plt.ylabel(str(xyz[i]), fontsize=5, fontweight="bold")
-    plt.autoscale()
-    plt.xticks(rotation=75)
-    plt.show()
-
-
                             #--------------------stump with varying window size--------------
 
     DAY_MULTIPLIER = 1
