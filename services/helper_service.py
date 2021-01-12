@@ -53,6 +53,8 @@ def get_mp_data(start_period, end_period, mp_ids, level=GanualityLevel.one_hour.
                                                                                       level, include_missing_mp)
     res_df = pd.DataFrame({'ts': pd.date_range(start=start_period, end=end_period, freq=get_freq_by_level(level))})
 
+    res_df['ts'] = res_df['ts'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
+
     for df in dfs:
         res_df = pd.merge(res_df, df, on='ts', how='outer')
 

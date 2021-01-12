@@ -3,7 +3,7 @@ from dateutil import parser
 from services.http_request_service import post
 from utils.enumerations import GanualityLevel, Services, RemoteControllers
 from utils.remote_dtos import HistoricTrendDTO
-
+import pytz
 
 
 def get_data_by_ids_period_and_level(start_period, end_period, mp_ids, level=GanualityLevel.one_hour.value, include_missing_mp = False):
@@ -25,7 +25,7 @@ def get_data_by_ids_period_and_level(start_period, end_period, mp_ids, level=Gan
             df.drop(columns='Description', axis=1, inplace=True)
             df.columns = ['ts', str(id)]
             df['ts'] = pd.to_datetime(df['ts'])
-            df['ts'] = pd.to_datetime(df['ts']).dt.tz_localize(None)
+            df['ts'] = df['ts'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
             dfs.append(df)
         elif include_missing_mp:
             missing_mp_ids.append(id)
