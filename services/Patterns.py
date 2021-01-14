@@ -11,9 +11,6 @@ import stumpy
 from matplotlib.patches import Rectangle
 from matplotlib.pyplot import cm
 from datetime import datetime
-
-
-
 def get_stumpy_patterns(df):
     res_df = df
     res_df.dropna(inplace=True)
