@@ -12,7 +12,7 @@ from datetime import datetime
 def analysis_to_file(res_df,mp_ids):
     string_ints = [str(int) for int in mp_ids]
     str_of_mpids = "_".join(string_ints)
-    res_df.to_csv('DataAnalysis/'+ data_analysis.Filename_Analysis.value + '_mpid_' + str_of_mpids + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv', index = False, header=True)
+    res_df.to_csv('DataAnalysis/DataAnalysis/'+ data_analysis.Filename_Analysis.value + '_mpid_' + str_of_mpids + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv', index = False, header=True)
 
 
 def threshold_diff(df,mpid):
