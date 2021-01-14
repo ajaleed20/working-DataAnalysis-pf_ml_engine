@@ -65,7 +65,6 @@ class GanualityLevel(enum.Enum):
     one_week = 7,
     one_min = 8,
 
-
 class data_analysis(enum.Enum):
     stumpy_measuringpoint_var = [1492]
     measuringpoint_var = [1492, 1491, 1493]
@@ -78,6 +77,11 @@ class data_analysis(enum.Enum):
     instance = 'hbc'
     iteration_num = 2
     thresholds = [300, 200, 100]
+
+
+
+
+
 
 
 

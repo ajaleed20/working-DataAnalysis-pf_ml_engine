@@ -12,6 +12,8 @@ from matplotlib.patches import Rectangle
 from matplotlib.pyplot import cm
 from datetime import datetime
 
+
+
 def get_stumpy_patterns(df):
     res_df = df
     res_df.dropna(inplace=True)
@@ -37,26 +39,41 @@ def get_stumpy_patterns(df):
     max_value = mp[:, 0].max()
     min_index_row = np.where(a == min_value)
     max_index_row = np.where(a == max_value)
+    #no_nearest_nghbr = np.argwhere(mp[:, 0] == mp[:, 0].max()).flatten()[0]
     print("Position/Index For Global Minima:", min_index_row)
     print("Value For Global Minima:", min_value)
     print("Position/Index For Global Maxima:", max_index_row)
     print("Value For Global Maxima:", max_value)
-
-    fig, axs = plt.subplots(len(min_index_row)+1, sharex=True, gridspec_kw={'hspace': 0})
-    plt.suptitle('Motif (Pattern) Discovery', fontsize='10')
-    res_df_ts = res_df['ts'].values
-    res_df_data = res_df[res_df.columns[1]]
-    plt.figure(figsize=(22, 22))
-    plt.ylabel(str(df.columns[1]), fontsize=24, fontweight="bold")
-    axs[0].plot(res_df_data)
-    axs[0].set_ylabel('Flow Valve 008', fontsize='05')
-    axs[1].set_xlabel('Time', fontsize='05')
-    axs[1].set_ylabel('Matrix Profile', fontsize='05')
-    axs[1].plot(mp[:, 0])
-    plt.autoscale()
-    plt.show()
-
     xyz = list(min_index_row[0])
+
+
+    # for global minima and maxima--------
+    appended_data = pd.DataFrame()
+    fig = plt.figure()
+    fig.set_size_inches(75, 75)
+    #plt.figure(figsize=(100, 100))
+    plt.rcParams['axes.linewidth'] = 5.5
+    plt.plot(mp[:, 0])
+    #plt.xlabel('ts', fontsize=24, fontweight="bold")
+    plt.ylabel('Maxima = RedLine, Minima (Motifs) = GreenLine', fontsize=55, fontweight="bold")
+    plt.title('Matrix Profile with Global Minima and Maxima', fontsize=55, fontweight="bold")
+    plt.xticks(rotation=70, weight='bold', fontsize=40)
+    plt.yticks(weight='bold', fontsize=40)
+    plt.axvline(x=max_index_row, linestyle="dashed", lw = 8.0, color='red')
+    for i in range(len(xyz)):
+        plt.axvline(x=xyz[i], linestyle="dashed", lw = 8.0, color='green')
+    plt.savefig('Graphs/Graphs_Motifs/' + 'GlobalMinimaAndMaxima_MatrixProfile' + '_' + datetime.now().strftime(
+        "%Y%m%d-%H%M%S") + '.png')
+    if (len(xyz) > 0):
+        for i in range(len(xyz)):     #for i in range(1, len(res_df.columns)):
+            data = res_df[xyz[i]:xyz[i] + m]
+            data.columns = ['ts_'+str(xyz[i]), str(xyz[i])]
+            data.reset_index(inplace=True)
+            appended_data = pd.concat([appended_data,data], axis =1)
+        appended_data.to_csv('DataAnalysis/MotifDataAnalysis/' + 'MotifData_for_' + str(xyz)
+                             + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
+                             index=False, header=True)
+    plt.show()
 
     fig_motif, axs_motif = plt.subplots(len(xyz), sharex=True, gridspec_kw={'hspace': 0})
     plt.suptitle('Matching Patterns', fontsize='10')
@@ -76,10 +93,10 @@ def get_stumpy_patterns(df):
             plt.title('Historic Data for ' + str(xyz[i]), fontsize=24, fontweight="bold")
             plt.xticks(rotation=degrees, weight='bold', fontsize=20)
             plt.yticks(weight='bold', fontsize=20)
-            plt.savefig('Graphs_Motifs/' + 'Motif_Historic Data_' + str(xyz[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
+            plt.savefig('Graphs/Graphs_Motifs/' + 'Motif_Historic Data_' + str(xyz[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
             plt.show()
 
-                            #--------------------stump with varying window size--------------
+#--------------------stump with varying window size--------------
 
     DAY_MULTIPLIER = 1
     x_axis_labels = df[(df.ts.dt.hour == 0)]['ts'].dt.strftime('%b %d').values[::DAY_MULTIPLIER]
@@ -87,8 +104,6 @@ def get_stumpy_patterns(df):
     x_axis_labels[1::2] = " "
     x_axis_labels, DAY_MULTIPLIER
     days_df = pd.DataFrame.from_dict(days_dict, orient='index', columns=['m'])
-    days_df.head()
-
     fig, axs = plt.subplots(len(days_df), sharex=True, gridspec_kw={'hspace': 0})
     fig.text(0.5, -0.1, 'Subsequence Start Date', ha='center', fontsize='10')
     fig.text(0.08, 0.5, 'Matrix Profile', va='center', rotation='vertical', fontsize='10')
@@ -97,11 +112,10 @@ def get_stumpy_patterns(df):
         axs[i].plot(mp[:, 0])
         title = f"m = {varying_m}"
         axs[i].set_title(title, fontsize=10, y=.5)
-
     plt.autoscale()
     plt.xticks(rotation=75)
     plt.suptitle('Matrix Profile Graph with Varying Window Sizes', fontsize='10')
-    plt.savefig('Graphs_Motifs/' + 'Motif_VaryingWindowSizes_' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
+    plt.savefig('Graphs/Graphs_Motifs/' + 'Motif_VaryingWindowSizes_m' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
     plt.show()
 
 def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, include_missing_mp= False):

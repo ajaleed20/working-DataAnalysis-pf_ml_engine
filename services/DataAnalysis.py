@@ -36,7 +36,7 @@ def plot_data_analysis_graphs(df):
         plt.title('Historic Data for '+ str(df.columns[i]), fontsize=24,fontweight="bold")
         plt.xticks(rotation=degrees,weight = 'bold',fontsize=20)
         plt.yticks(weight = 'bold',fontsize=20)
-        plt.savefig('Graphs_DataAnalysis/' + 'Analysis_Historic Data_' + 'mp_id_' + str(df.columns[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S"))
+        plt.savefig('Graphs/Graphs_DataAnalysis/' + 'Analysis_Historic Data_' + 'mp_id_' + str(df.columns[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S"))
         plt.show()
 
     for i in range(2, len(df.columns)):
@@ -52,7 +52,7 @@ def plot_data_analysis_graphs(df):
         plt.xticks(rotation=degrees, weight = 'bold',fontsize=20)
         plt.yticks(weight = 'bold',fontsize=20)
         #plt.figure(figsize=(10,10))
-        plt.savefig('Graphs_DataAnalysis/' + 'Analysis_Correlated_Data_' + 'mp_id_' + str(df.columns[1]) + '_' + str(df.columns[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S"))
+        plt.savefig('Graphs/Graphs_DataAnalysis/' + 'Analysis_Correlated_Data_' + 'mp_id_' + str(df.columns[1]) + '_' + str(df.columns[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S"))
         plt.show()
 
 
