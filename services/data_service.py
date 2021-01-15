@@ -14,7 +14,6 @@ def get_data_by_ids_period_and_level(start_period, end_period, mp_ids, level=Gan
     data = post(Services.data_service.value, RemoteControllers.data_trend.value, 'GetAggregatedDataByIDS',
                 dto.__dict__)
     missing_mp_ids = []
-
     if ('Message' in data):
         raise Exception('unable to get data from data service')
 
