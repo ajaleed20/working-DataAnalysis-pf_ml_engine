@@ -15,23 +15,28 @@ import sys
 
 
 def get_stumpy_query_pattern(df,Q_df):
+    #for original time series sequence
     res_df = df
     res_df.dropna(inplace=True)
     res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
     res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace(0, np.nan)
     res_df.dropna(inplace=True)
 
+    # for query/input time series (sub-sequence)
     Q_res_df = Q_df
     Q_res_df.dropna(inplace=True)
     Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
     Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace(0, np.nan)
     Q_res_df.dropna(inplace=True)
 
-    plt.suptitle('Pattern or Query Subsequence, Q_df', fontsize='10')
-    plt.xlabel('Time', fontsize='10')
-    plt.ylabel('Acceleration', fontsize='10')
-    plt.plot(Q_res_df[Q_res_df.columns[0]],Q_res_df[Q_res_df.columns[1]], lw=2, color="C1")
-    plt.xticks(rotation=70, weight='bold', fontsize=10)
+    # plotting query/input time series (sub-sequence) along datetime
+    plt.suptitle('Query Subsequence, Q_df', fontsize='10')
+    plt.xlabel('Time', fontsize='5', y=0)
+    plt.ylabel('Values', fontsize='7')
+    plt.plot(Q_res_df[Q_res_df.columns[0]],Q_res_df[Q_res_df.columns[1]], lw=1, color="green")
+    plt.xticks(rotation=70, weight='bold', fontsize=5)
+    plt.xticks(weight='bold', fontsize=5)
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Motif_Query_Pattern_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
     plt.show()
 
     days_dict = {
@@ -42,143 +47,64 @@ def get_stumpy_query_pattern(df,Q_df):
         "Twenty-min": 40,
         "Half-Hour": 60,
     }
+
+    # Since MASS computes z-normalized Euclidean distances, we should z-normalize our subsequences before plotting
     distance_profile = stumpy.core.mass(Q_res_df[Q_res_df.columns[1]], res_df[res_df.columns[1]])
     idx = np.argmin(distance_profile)
     print(f"The nearest neighbor to `Query Pattern` is located at index {idx} in `Original Data`")
-    # Since MASS computes z-normalized Euclidean distances, we should z-normalize our subsequences before plotting
     temp_res_df = res_df[res_df.columns[1]]
+    # plotting z normalization for query subsequence and provided time-series in temp_res_df
     Q_z_norm = stumpy.core.z_norm(Q_res_df[Q_res_df.columns[1]].values)
     T_z_norm = stumpy.core.z_norm(temp_res_df.values[idx:idx + len(Q_res_df)])
-    plt.suptitle('Comparing The Query (Orange) And Its Nearest Neighbor (Blue)', fontsize='15')
-    plt.xlabel('Time', fontsize='10')
-    plt.ylabel('Acceleration', fontsize='10')
-    plt.plot(Q_z_norm, lw=2, color="C1")
-    plt.plot(T_z_norm, lw=2, color="C2")
+    fig, axs = plt.subplots(2, sharex=True, gridspec_kw={'hspace': 0})
+    plt.suptitle('Comparing z normalized Query subsequence and its possible nearest neighbor', fontsize='7')
+    axs[0].set_title('Query Pattern', fontsize=5, y=0)
+    axs[1].set_title('Closest Pattern', fontsize=5, y=0)
+    axs[1].set_xlabel('Time')
+    axs[0].set_ylabel('Query Pattern Values',fontsize=5)
+    axs[1].set_ylabel('Closest Pattern Values',fontsize=5)
+    # ylim_lower = -25
+    # ylim_upper = 25
+    # axs[0].set_ylim(ylim_lower, ylim_upper)
+    # axs[1].set_ylim(ylim_lower, ylim_upper)
+    axs[0].plot(Q_z_norm, c='green')
+    axs[1].plot(T_z_norm, c='orange')
+    plt.autoscale()
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Motif_z_normalized_graphs_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
     plt.show()
 
+    # plotting original data for query subsequence and provided time-series in temp_res_df
+    fig, axs = plt.subplots(2, sharex=True, gridspec_kw={'hspace': 0})
+    plt.suptitle('Closest Pattern in Original Data (non normalized)', fontsize='7')
+    axs[0].set_title('Query Pattern', fontsize=5, y=0)
+    axs[1].set_title('Closest Pattern', fontsize=5, y=0)
+    axs[1].set_xlabel('Time')
+    axs[0].set_ylabel('Query Pattern Values',fontsize=5)
+    axs[1].set_ylabel('Closest Pattern Values',fontsize=5)
+    # ylim_lower = -25
+    # ylim_upper = 25
+    # axs[0].set_ylim(ylim_lower, ylim_upper)
+    # axs[1].set_ylim(ylim_lower, ylim_upper)
+    axs[0].plot(Q_res_df[Q_res_df.columns[1]].values, c = 'green')
+    axs[1].plot(temp_res_df.values[idx:idx + len(Q_res_df)], c='orange')
+    plt.autoscale()
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'OriginalData_graphs_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
 
-
-
-
-    m = days_dict['Half-Hour']
-    mp = stumpy.stump(res_df[res_df.columns[1]], m,ignore_trivial=True)
-    for index, value in np.ndenumerate(mp[:, 0]):
-        mp[:, 0][index] = np.around(value, 2)
-
-    a = mp[:, 0]
-    min_value = mp[:, 0].min()
-    max_value = mp[:, 0].max()
-    min_index_row = np.where(a == min_value)
-    max_index_row = np.where(a == max_value)
-    #no_nearest_nghbr = np.argwhere(mp[:, 0] == mp[:, 0].max()).flatten()[0]
-    print("Position/Index For Global Minima:", min_index_row)
-    print("Value For Global Minima:", min_value)
-    print("Position/Index For Global Maxima:", max_index_row)
-    print("Value For Global Maxima:", max_value)
-    xyz = list(min_index_row[0])
-
-
-    # for global minima and maxima--------
     appended_data = pd.DataFrame()
-    fig = plt.figure()
-    fig.set_size_inches(75, 75)
-    #plt.figure(figsize=(100, 100))
-    plt.rcParams['axes.linewidth'] = 2.5
-    plt.plot(mp[:, 0])
-    #plt.xlabel('ts', fontsize=24, fontweight="bold")
-    plt.ylabel('Maxima = RedLine, Minima (Motifs) = GreenLine', fontsize=55, fontweight="bold")
-    plt.title('Matrix Profile with Global Minima and Maxima', fontsize=55, fontweight="bold")
-    plt.xticks(rotation=70, weight='bold', fontsize=40)
-    plt.yticks(weight='bold', fontsize=40)
-    plt.axvline(x=max_index_row, linestyle="dashed", lw = 8.0, color='red')
-    for i in range(len(xyz)):
-        plt.axvline(x=xyz[i], linestyle="dashed", lw = 8.0, color='green')
-    plt.savefig('Graphs/Graphs_Motifs/' + 'GlobalMinimaAndMaxima_MatrixProfile' + '_' + datetime.now().strftime(
-        "%Y%m%d-%H%M%S") + '.png')
-    if (len(xyz) > 0):
-        for i in range(len(xyz)):     #for i in range(1, len(res_df.columns)):
-            data = res_df[xyz[i]:xyz[i] + m]
-            data.columns = ['ts_'+str(xyz[i]), str(xyz[i])]
-            data.reset_index(inplace=True)
-            appended_data = pd.concat([appended_data,data], axis =1)
-        appended_data.to_csv('DataAnalysis/MotifDataAnalysis/' + 'MotifData_for_' + str(xyz)
+    data = res_df[idx:idx + len(Q_res_df)]
+    data.columns = ['ts_'+str(idx), 'index_'+ str(idx)]
+    data.reset_index(inplace=True)
+    appended_data = data
+    data = Q_res_df
+    data.columns = ['ts_Query_Motif' , 'Query_Motif_Data']
+    data.reset_index(inplace=True)
+    appended_data = pd.concat([appended_data, data], axis=1)
+    appended_data.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique2/' +  'MotifData_for_' + str(idx)
                              + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
                              index=False, header=True)
     plt.show()
 
-    fig_motif, axs_motif = plt.subplots(len(xyz), sharex=True, gridspec_kw={'hspace': 0})
-    plt.suptitle('Matching Patterns', fontsize='10')
-    color = iter(cm.rainbow(np.linspace(0, 10)))
-    orig_df_ts = res_df['ts'].values
-    orig_df_data = res_df[res_df.columns[1]]
-    degrees = 70
-    if (len(xyz) > 0):
-        for i in range(len(xyz)):     #for i in range(1, len(res_df.columns)):
-            orig_df_t = orig_df_ts[xyz[i]:xyz[i] + m]
-            orig_df_d = orig_df_data[xyz[i]:xyz[i] + m]
-            #res_df_data = res_df[df.columns[i]]
-            plt.figure(figsize=(22, 22))
-            plt.plot(orig_df_t, orig_df_d, 'r')
-            plt.xlabel('ts', fontsize=24, fontweight="bold")
-            plt.ylabel(str(xyz[i]), fontsize=24, fontweight="bold")
-            plt.title('Historic Data for ' + str(xyz[i]), fontsize=24, fontweight="bold")
-            plt.xticks(rotation=degrees, weight='bold', fontsize=20)
-            plt.yticks(weight='bold', fontsize=20)
-            plt.savefig('Graphs/Graphs_Motifs/' + 'Motif_Historic Data_' + str(xyz[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
-            plt.show()
 
-#--------------------stump with varying window size--------------
-
-    DAY_MULTIPLIER = 1
-    x_axis_labels = df[(df.ts.dt.hour == 0)]['ts'].dt.strftime('%b %d').values[::DAY_MULTIPLIER]
-    x_axis_labels = np.unique(x_axis_labels)
-    x_axis_labels[1::2] = " "
-    x_axis_labels, DAY_MULTIPLIER
-    days_df = pd.DataFrame.from_dict(days_dict, orient='index', columns=['m'])
-    fig, axs = plt.subplots(len(days_df), sharex=True, gridspec_kw={'hspace': 0})
-    fig.text(0.5, -0.1, 'Subsequence Start Date', ha='center', fontsize='10')
-    fig.text(0.08, 0.5, 'Matrix Profile', va='center', rotation='vertical', fontsize='10')
-    for i, varying_m in enumerate(days_df['m'].values):
-        mp = stumpy.stump(res_df[res_df.columns[1]], varying_m)
-        axs[i].plot(mp[:, 0])
-        title = f"m = {varying_m}"
-        axs[i].set_title(title, fontsize=10, y=.5)
-    plt.autoscale()
-    plt.xticks(rotation=75)
-    plt.suptitle('Matrix Profile Graph with Varying Window Sizes', fontsize='10')
-    plt.savefig('Graphs/Graphs_Motifs/' + 'Motif_VaryingWindowSizes_m' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
-    plt.show()
-
-    m = 60
-    orig1 = orig_df_data[xyz[0]:xyz[0] + m]
-    orig2 = orig_df_data[xyz[2]:xyz[2] + m]
-    fig, axs = plt.subplots(len(xyz))
-    plt.suptitle('MPID DataSet', fontsize='20')
-    axs[0].set_ylabel("MPID DataSet", fontsize='5')
-    axs[0].plot(res_df[res_df.columns[1]], alpha=0.5, linewidth=0.5)
-    plt.autoscale()
-    plt.show()
-    for i in range(len(xyz)):
-        plt.axvline(x=xyz[i], linestyle="dashed", lw = 2.0, color='green')
-    # axs[0].plot(orig1)
-    # axs[0].plot(orig2)
-    # rect = Rectangle((643, 0), m, 40, facecolor='lightgrey')
-    # axs[0].add_patch(rect)
-    # rect = Rectangle((8724, 0), m, 40, facecolor='lightgrey')
-    # axs[0].add_patch(rect)
-    for i in range(len(xyz)):
-        axs[i].set_xlabel("Time", fontsize='10')
-        axs[i].set_ylabel("Steam Flow", fontsize='10')
-        axs[i].plot(orig_df_data[xyz[i]:xyz[i] + m], color='C1')
-        plt.autoscale()
-        plt.show()
-
-    # axs[1].set_xlabel("Time", fontsize='20')
-    # axs[1].set_ylabel("Steam Flow", fontsize='20')
-    # axs[1].plot(orig1, color='C1')
-    # axs[2].plot(orig2, color='C1')
-    plt.autoscale()
-    plt.show()
 
 def get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_period, mp_ids, level, include_missing_mp= False):
     dfs, missing_mp_ids = data_service.get_data_by_ids_period_and_level(start_period, end_period, mp_ids,
@@ -220,7 +146,7 @@ config_oauth(config.get_current_config())
 
 try:
     execute_data_analysis(data_analysis.stumpy_measuringpoint_var.value, data_analysis.start_period.value, data_analysis.end_period.value,data_analysis.granularity.value,data_analysis.Q_start_period.value, data_analysis.Q_end_period.value)
-    print("end of program successful with file saved to DataAnalysis folder, inside project folder.")
+    print("\nEnd of program successful run with files  saved to DataAnalysis and Graph folders, inside project folder:services.")
     exit()
 except Exception as e:
     print(e)

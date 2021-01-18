@@ -27,6 +27,8 @@ def get_stumpy_patterns(df):
         "Half-Hour": 60,
     }
     m = days_dict['Half-Hour']
+
+    #Calculating Matrix Profile, using Python Library STUMPY
     mp = stumpy.stump(res_df[res_df.columns[1]], m)
     for index, value in np.ndenumerate(mp[:, 0]):
         mp[:, 0][index] = np.around(value, 2)
@@ -42,35 +44,44 @@ def get_stumpy_patterns(df):
     print("Position/Index For Global Maxima:", max_index_row)
     print("Value For Global Maxima:", max_value)
     xyz = list(min_index_row[0])
+    abc = list(max_index_row[0])
 
 
-    # for global minima and maxima--------
+    # For Global Minima and Maxima, out of the Matrix Profile--------
     appended_data = pd.DataFrame()
+    #plt.figure(figsize=(30, 30))
     fig = plt.figure()
     fig.set_size_inches(75, 75)
-    #plt.figure(figsize=(100, 100))
+    plt.figure(figsize=(100, 100))
     plt.rcParams['axes.linewidth'] = 5.5
-    plt.plot(mp[:, 0])
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique1/' + 'MatrixProfile' + '_' + datetime.now().strftime(
+            "%Y%m%d-%H%M%S") + '.png')
+    plt.plot(mp[:, 0], 'r')
+
     #plt.xlabel('ts', fontsize=24, fontweight="bold")
-    plt.ylabel('Maxima = RedLine, Minima (Motifs) = GreenLine', fontsize=55, fontweight="bold")
-    plt.title('Matrix Profile with Global Minima and Maxima', fontsize=55, fontweight="bold")
-    plt.xticks(rotation=70, weight='bold', fontsize=40)
-    plt.yticks(weight='bold', fontsize=40)
-    plt.axvline(x=max_index_row, linestyle="dashed", lw = 8.0, color='red')
+    plt.ylabel('Maxima = RedLine, Minima (Motifs) = GreenLine', fontsize=5)
+    plt.title('Matrix Profile with Global Minima and Maxima', fontsize=15, fontweight="bold")
+    plt.xticks(rotation=70, weight='bold', fontsize=5)
+    plt.yticks(weight='bold', fontsize=5)
+
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique1/' + 'Global_MinMax_MatrixProfile' + '_' + datetime.now().strftime(
+            "%Y%m%d-%H%M%S") + '.png')
+    for i in range(len(abc)):
+        plt.axvline(x=abc[i], linestyle="dashed", lw = 1.5, color='red')
     for i in range(len(xyz)):
-        plt.axvline(x=xyz[i], linestyle="dashed", lw = 8.0, color='green')
-    plt.savefig('Graphs/Graphs_Motifs/' + 'GlobalMinimaAndMaxima_MatrixProfile' + '_' + datetime.now().strftime(
-        "%Y%m%d-%H%M%S") + '.png')
+        plt.axvline(x=xyz[i], linestyle="dashed", lw = 1.5, color='green')
+    plt.plot(res_df[res_df.columns[1]].values, 'r')
+
     if (len(xyz) > 0):
         for i in range(len(xyz)):     #for i in range(1, len(res_df.columns)):
             data = res_df[xyz[i]:xyz[i] + m]
             data.columns = ['ts_'+str(xyz[i]), str(xyz[i])]
             data.reset_index(inplace=True)
             appended_data = pd.concat([appended_data,data], axis =1)
-        appended_data.to_csv('DataAnalysis/MotifDataAnalysis/' + 'MotifData_for_' + str(xyz)
-                             + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
+        appended_data.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique1/' + '_MotifData_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
                              index=False, header=True)
-    plt.show()
+
+    #plt.show()
 
     fig_motif, axs_motif = plt.subplots(len(xyz), sharex=True, gridspec_kw={'hspace': 0})
     plt.suptitle('Matching Patterns', fontsize='10')
@@ -83,18 +94,17 @@ def get_stumpy_patterns(df):
             orig_df_t = orig_df_ts[xyz[i]:xyz[i] + m]
             orig_df_d = orig_df_data[xyz[i]:xyz[i] + m]
             #res_df_data = res_df[df.columns[i]]
-            plt.figure(figsize=(22, 22))
+            #plt.figure(figsize=(22, 22))
             plt.plot(orig_df_t, orig_df_d, 'r')
-            plt.xlabel('ts', fontsize=24, fontweight="bold")
-            plt.ylabel(str(xyz[i]), fontsize=24, fontweight="bold")
-            plt.title('Historic Data for ' + str(xyz[i]), fontsize=24, fontweight="bold")
-            plt.xticks(rotation=degrees, weight='bold', fontsize=20)
-            plt.yticks(weight='bold', fontsize=20)
-            plt.savefig('Graphs/Graphs_Motifs/' + 'Motif_Historic Data_' + str(xyz[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
-            plt.show()
+            plt.xlabel('ts', fontsize=5)
+            plt.ylabel(str(xyz[i]), fontsize=5)
+            plt.title('Historic Data for ' + str(xyz[i]), fontsize=15, fontweight="bold")
+            plt.xticks(rotation=degrees, weight='bold', fontsize=5)
+            plt.yticks(weight='bold', fontsize=5)
+            plt.savefig('Graphs/Graphs_Motifs/PatternTechnique1/' + 'Motif_Historic Data_' + str(xyz[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
+            #plt.show()
 
-#--------------------stump with varying window size--------------
-
+    #--------------------stump with varying window sizes: i.e. value of 'm' --------------
     DAY_MULTIPLIER = 1
     x_axis_labels = df[(df.ts.dt.hour == 0)]['ts'].dt.strftime('%b %d').values[::DAY_MULTIPLIER]
     x_axis_labels = np.unique(x_axis_labels)
@@ -112,8 +122,8 @@ def get_stumpy_patterns(df):
     plt.autoscale()
     plt.xticks(rotation=75)
     plt.suptitle('Matrix Profile Graph with Varying Window Sizes', fontsize='10')
-    plt.savefig('Graphs/Graphs_Motifs/' + 'Motif_VaryingWindowSizes_m' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
-    plt.show()
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique1/' + 'Motif_VaryingWindowSizes_m' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
+    #plt.show()
 
 def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, include_missing_mp= False):
     dfs, missing_mp_ids = data_service.get_data_by_ids_period_and_level(start_period, end_period, mp_ids,
@@ -141,7 +151,7 @@ config_oauth(config.get_current_config())
 
 try:
     execute_data_analysis(data_analysis.stumpy_measuringpoint_var.value, data_analysis.start_period.value, data_analysis.end_period.value,data_analysis.granularity.value)
-    print("end of program successful with file saved to DataAnalysis folder, inside project folder.")
+    print("\nEnd of program successful with file saved to DataAnalysis and Graphs folders, inside project folder:services")
     exit()
 except Exception as e:
     print(e)
