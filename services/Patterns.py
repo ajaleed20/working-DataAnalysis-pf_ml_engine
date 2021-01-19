@@ -52,12 +52,13 @@ def get_stumpy_patterns(df):
     fig = plt.figure()
     fig.set_size_inches(75, 75)
     plt.rcParams['axes.linewidth'] = 5.5
-    plt.title('Matrix Profile Graph', fontsize=15, fontweight="bold")
-    # plt.xlim([min_value, max_value])
-    # plt.xticks(rotation=70, weight='bold', fontsize=5)
-    # plt.yticks(weight='bold', fontsize=5)
-    # plt.autoscale(enable=True, axis='y')
-    plt.plot(mp[:, 0], 'r')
+    plt.title('Matrix Profile Graph', fontsize=80, fontweight="bold")
+    plt.ylim([min_value, max_value])
+    plt.xticks(rotation=70, weight='bold', fontsize=60)
+    plt.yticks(weight='bold', fontsize=60)
+    plt.ylabel('Euclidean Distances', fontsize=50,fontweight="bold")
+    plt.autoscale(enable=True, axis='y')
+    plt.plot(mp[:, 0])
     # plt.clf()
     # #plt.figure(figsize=(30, 30))
     # # fig = plt.figure()
@@ -70,15 +71,19 @@ def get_stumpy_patterns(df):
             "%Y%m%d-%H%M%S") + '.png')
 
     #plt.xlabel('ts', fontsize=24, fontweight="bold")
-    plt.ylabel('Maxima = RedLine, Minima (Motifs) = GreenLine', fontsize=5)
-    plt.title('Matrix Profile with Global Minima and Maxima', fontsize=15, fontweight="bold")
-    plt.xticks(rotation=70, weight='bold', fontsize=5)
-    plt.yticks(weight='bold', fontsize=5)
-    plt.plot(res_df[res_df.columns[1]], 'r')
+    fig = plt.figure()
+    fig.set_size_inches(75, 75)
+    plt.rcParams['axes.linewidth'] = 5.5
+    plt.title('Global Minima and Maxima Indexes Points On Original Data', fontsize=80, fontweight="bold")
+    plt.ylabel('Maxima = RedLine, Minima = GreenLine', fontsize=50, fontweight="bold")
+    plt.xticks(rotation=70, weight='bold', fontsize=60)
+    plt.yticks(weight='bold', fontsize=60)
+    plt.autoscale(enable=True, axis='y')
+    plt.plot(res_df[res_df.columns[1]])
     for i in range(len(abc)):
-        plt.axvline(x=abc[i], linestyle="dashed", lw = 1.0, color='red')
+        plt.axvline(x=abc[i], linestyle="dashed", lw = 4.0, color='red')
     for i in range(len(xyz)):
-        plt.axvline(x=xyz[i], linestyle="dashed", lw = 1.0, color='green')
+        plt.axvline(x=xyz[i], linestyle="dashed", lw = 4.0, color='green')
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique1/' + 'Global_MinMax_MatrixProfile' + '_' + datetime.now().strftime(
             "%Y%m%d-%H%M%S") + '.png')
 
@@ -86,7 +91,7 @@ def get_stumpy_patterns(df):
     if (len(xyz) > 0):
         for i in range(len(xyz)):     #for i in range(1, len(res_df.columns)):
             data = res_df[xyz[i]:xyz[i] + m]
-            data.columns = ['ts_'+str(xyz[i]), str(xyz[i])]
+            data.columns = ['ts_'+str(xyz[i]), 'Data_'+str(xyz[i])]
             data.reset_index(inplace=True)
             appended_data = pd.concat([appended_data,data], axis =1)
         appended_data.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique1/' + '_MotifData_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
@@ -106,12 +111,15 @@ def get_stumpy_patterns(df):
             orig_df_d = orig_df_data[xyz[i]:xyz[i] + m]
             #res_df_data = res_df[df.columns[i]]
             #plt.figure(figsize=(22, 22))
-            plt.plot(orig_df_t, orig_df_d, 'r')
-            plt.xlabel('ts', fontsize=5)
-            plt.ylabel(str(xyz[i]), fontsize=5)
-            plt.title('Historic Data for ' + str(xyz[i]), fontsize=15, fontweight="bold")
-            plt.xticks(rotation=degrees, weight='bold', fontsize=5)
-            plt.yticks(weight='bold', fontsize=5)
+            fig = plt.figure()
+            fig.set_size_inches(75, 75)
+            plt.rcParams['axes.linewidth'] = 5.5
+            plt.title('Historic Data for ' + str(xyz[i]), fontsize=80, fontweight="bold")
+            plt.plot(orig_df_t, orig_df_d)
+            plt.xlabel('ts', fontsize=10)
+            plt.ylabel(str(xyz[i]), fontsize=50, fontweight="bold")
+            plt.xticks(rotation=degrees, weight='bold', fontsize=60)
+            plt.yticks(weight='bold', fontsize=60)
             plt.savefig('Graphs/Graphs_Motifs/PatternTechnique1/' + 'Motif_Historic Data_' + str(xyz[i]) + '_' + datetime.now().strftime("%Y%m%d-%H%M%S")+ '.png')
             #plt.show()
 
