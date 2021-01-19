@@ -66,35 +66,41 @@ class GanualityLevel(enum.Enum):
     one_min = 8,
 
 class data_analysis(enum.Enum):
+    # For Patterns.py Implementation
     stumpy_measuringpoint_var = [1492]
+
+    # For DataAnalysis.py Implementation
     measuringpoint_var = [1492, 1491, 1493]
-    #measuringpoint_var = [1492,1461,1486,1488,1490,1463,1524,1476]  # Measuring Point Ids of dependent variables
     start_period = '11-01-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     end_period = '11-30-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    Q_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    Q_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    A_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    A_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    B_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    B_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     Filename_Analysis = 'DataAnalysis'
     Filename_Threshold = 'Data_Above_Threshold'
+    thresholds = [300, 200, 100]
+
+
+    #For pattern_technique2.py with Query patter
+    Q_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    Q_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+
+
+    # For pattern_technique3.py with AB JOIN Technique
+    A_stumpy_measuringpoint_var = [1492]
+    B_stumpy_measuringpoint_var = [1491]
+    A_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    A_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    B_start_period = '10-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    B_end_period = '10-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+
+
+    # General purpose variables for all implementations
     granularity = 2
     instance = 'hbc'
     iteration_num = 2
-    thresholds = [300, 200, 100]
-    input_mpid = [1492, 1491, 1493]
-    target_mpid = [1492]
+
+
+    # input_mpid = [1492, 1491, 1493]
+    # target_mpid = [1492]
     # A_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     # A_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     # B_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     # B_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-
-
-
-
-
-
-
-
-
