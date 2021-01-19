@@ -37,7 +37,6 @@ def get_stumpy_query_pattern(df,Q_df):
     plt.xticks(rotation=70, weight='bold', fontsize=5)
     plt.xticks(weight='bold', fontsize=5)
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Motif_Query_Pattern_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
-    plt.show()
 
     days_dict = {
         "Three-min": 6,
@@ -71,7 +70,7 @@ def get_stumpy_query_pattern(df,Q_df):
     axs[1].plot(T_z_norm, c='orange')
     plt.autoscale()
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Motif_z_normalized_graphs_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
-    plt.show()
+
 
     # plotting original data for query subsequence and provided time-series in temp_res_df
     fig, axs = plt.subplots(2, sharex=True, gridspec_kw={'hspace': 0})
@@ -102,8 +101,51 @@ def get_stumpy_query_pattern(df,Q_df):
     appended_data.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique2/' +  'MotifData_for_' + str(idx)
                              + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
                              index=False, header=True)
-    plt.show()
+    plt.clf()
 
+    #plotting matching query pattern on original data time-series
+    fig = plt.figure()
+    fig.set_size_inches(75, 75)
+    plt.rcParams['axes.linewidth'] = 5.5
+    plt.title('Original Dataset with Matching Query pattern', fontsize='80', fontweight="bold")
+    plt.xlabel('Time', fontsize='50', fontweight="bold")
+    plt.ylabel('Values', fontsize='50', fontweight="bold")
+    plt.xticks(rotation=70, weight='bold', fontsize=60)
+    plt.yticks(weight='bold', fontsize=60)
+    plt.autoscale()
+    plt.plot(res_df[res_df.columns[1]])
+    # plt.text(2000, 4.5, 'Cement', color="black", fontsize=20)
+    # plt.text(10000, 4.5, 'Cement', color="black", fontsize=20)
+    # ax = plt.gca()
+    # rect = Rectangle((5000, -4), 3000, 10, facecolor='lightgrey')
+    # ax.add_patch(rect)
+    # plt.text(6000, 4.5, 'Carpet', color="black", fontsize=20)
+    plt.plot(range(idx, idx + len(Q_res_df)), temp_res_df.values[idx:idx + len(Q_res_df)], lw=2)
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Matching_Pattern_From_OriginalData' + datetime.now().strftime(
+        "%Y%m%d-%H%M%S") + '.png')
+
+    # This simply returns the (sorted) positional indices of the top 16 smallest distances found in the distance_profile
+    k = 5
+    idxs = np.argpartition(distance_profile, k)[:k]
+    idxs = idxs[np.argsort(distance_profile[idxs])]
+    fig = plt.figure()
+    fig.set_size_inches(75, 75)
+    plt.rcParams['axes.linewidth'] = 5.5
+    plt.title('Original Dataset with Matching Query pattern', fontsize='80', fontweight="bold")
+    # plt.xlabel('Time', fontsize='20')
+    # plt.ylabel('Acceleration', fontsize='20')
+    plt.plot(res_df[res_df.columns[1]])
+    plt.autoscale()
+    # plt.text(2000, 4.5, 'Cement', color="black", fontsize=20)
+    # plt.text(10000, 4.5, 'Cement', color="black", fontsize=20)
+    # ax = plt.gca()
+    # rect = Rectangle((5000, -4), 3000, 10, facecolor='lightgrey')
+    # ax.add_patch(rect)
+    # plt.text(6000, 4.5, 'Carpet', color="black", fontsize=20)
+    for idx in idxs:
+        plt.plot(range(idx, idx + len(Q_res_df)), temp_res_df.values[idx:idx + len(Q_res_df)], lw=2)
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'k_Closest_Matching_Patterns' + datetime.now().strftime(
+            "%Y%m%d-%H%M%S") + '.png')
 
 
 def get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_period, mp_ids, level, include_missing_mp= False):
