@@ -61,6 +61,8 @@ def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, include_m
                                                                                       level, include_missing_mp)
     res_df = pd.DataFrame({'ts': pd.date_range(start=start_period, end=end_period, freq=get_freq_by_level(level))})
 
+    res_df['ts'] = res_df['ts'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
+
     for df in dfs:
         res_df = pd.merge(res_df, df, on='ts', how='outer')
 
@@ -91,5 +93,6 @@ config_oauth(config.get_current_config())
 try:
     execute_data_analysis(data_analysis.measuringpoint_var.value, data_analysis.start_period.value, data_analysis.end_period.value,data_analysis.granularity.value)
     print("end of program successful with file saved to DataAnalysis folder, inside project folder.")
+    exit()
 except Exception as e:
     print(e)
