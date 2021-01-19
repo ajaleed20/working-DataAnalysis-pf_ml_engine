@@ -49,28 +49,39 @@ def get_stumpy_patterns(df):
 
     # For Global Minima and Maxima, out of the Matrix Profile--------
     appended_data = pd.DataFrame()
-    #plt.figure(figsize=(30, 30))
     fig = plt.figure()
     fig.set_size_inches(75, 75)
-    plt.figure(figsize=(100, 100))
     plt.rcParams['axes.linewidth'] = 5.5
+    plt.title('Matrix Profile Graph', fontsize=15, fontweight="bold")
+    # plt.xlim([min_value, max_value])
+    # plt.xticks(rotation=70, weight='bold', fontsize=5)
+    # plt.yticks(weight='bold', fontsize=5)
+    # plt.autoscale(enable=True, axis='y')
+    plt.plot(mp[:, 0], 'r')
+    # plt.clf()
+    # #plt.figure(figsize=(30, 30))
+    # # fig = plt.figure()
+    # # fig.set_size_inches(75, 75)
+    # plt.figure(figsize=(50, 50))
+    # #plt.rcParams['axes.linewidth'] = 5.5
+    #
+    # plt.plot(mp[:, 0])
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique1/' + 'MatrixProfile' + '_' + datetime.now().strftime(
             "%Y%m%d-%H%M%S") + '.png')
-    plt.plot(mp[:, 0], 'r')
 
     #plt.xlabel('ts', fontsize=24, fontweight="bold")
     plt.ylabel('Maxima = RedLine, Minima (Motifs) = GreenLine', fontsize=5)
     plt.title('Matrix Profile with Global Minima and Maxima', fontsize=15, fontweight="bold")
     plt.xticks(rotation=70, weight='bold', fontsize=5)
     plt.yticks(weight='bold', fontsize=5)
-
+    plt.plot(res_df[res_df.columns[1]], 'r')
+    for i in range(len(abc)):
+        plt.axvline(x=abc[i], linestyle="dashed", lw = 1.0, color='red')
+    for i in range(len(xyz)):
+        plt.axvline(x=xyz[i], linestyle="dashed", lw = 1.0, color='green')
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique1/' + 'Global_MinMax_MatrixProfile' + '_' + datetime.now().strftime(
             "%Y%m%d-%H%M%S") + '.png')
-    for i in range(len(abc)):
-        plt.axvline(x=abc[i], linestyle="dashed", lw = 1.5, color='red')
-    for i in range(len(xyz)):
-        plt.axvline(x=xyz[i], linestyle="dashed", lw = 1.5, color='green')
-    plt.plot(res_df[res_df.columns[1]].values, 'r')
+
 
     if (len(xyz) > 0):
         for i in range(len(xyz)):     #for i in range(1, len(res_df.columns)):
