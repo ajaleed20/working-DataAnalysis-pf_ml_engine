@@ -92,7 +92,7 @@ config_oauth(config.get_current_config())
 
 try:
     execute_data_analysis(data_analysis.measuringpoint_var.value, data_analysis.start_period.value, data_analysis.end_period.value,data_analysis.granularity.value)
-    print("end of program successful with file saved to DataAnalysis folder, inside project folder.")
+    print("\nend of program successful with file saved to DataAnalysis and Graphs folders, inside project folder:services")
     exit()
 except Exception as e:
     print(e)
