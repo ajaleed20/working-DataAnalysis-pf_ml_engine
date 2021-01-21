@@ -111,19 +111,19 @@ def get_stumpy_query_pattern(A_df,B_df):
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'Overlaying_A_B_sub-sequences_for_AB-join' + datetime.now().strftime(
         "%Y%m%d-%H%M%S") + '.png')
     plt.show()
-
-    # Overlaying The Best Matching Motif for T_B in T_A
-    temp_A = A_res_df[A_res_df.columns[1]]
-    temp_B = B_res_df[B_res_df.columns[1]]
-    plt.plot(temp_A.iloc[TA_ClosestMatch_in_TB_index: TA_ClosestMatch_in_TB_index + m], label='Pattern A')
-    plt.plot(temp_B.iloc[TB_ClosestMatch_in_TA_index: TB_ClosestMatch_in_TA_index + m], label='Pattern B')
-    plt.xlabel('Time')
-    plt.ylabel('Pattern Values')
-    plt.legend()
-    plt.savefig(
-        'Graphs/Graphs_Motifs/PatternTechnique3/' + 'Overlaying_A_B_sub-sequences_for_AB-join' + datetime.now().strftime(
-            "%Y%m%d-%H%M%S") + '.png')
-    plt.show()
+    #####
+    # # Overlaying The Best Matching Motif for T_B in T_A
+    # temp_A = A_res_df[A_res_df.columns[1]]
+    # temp_B = B_res_df[B_res_df.columns[1]]
+    # plt.plot(temp_A.iloc[TA_ClosestMatch_in_TB_index: TA_ClosestMatch_in_TB_index + m], label='Pattern A')
+    # plt.plot(temp_B.iloc[TB_ClosestMatch_in_TA_index: TB_ClosestMatch_in_TA_index + m], label='Pattern B')
+    # plt.xlabel('Time')
+    # plt.ylabel('Pattern Values')
+    # plt.legend()
+    # plt.savefig(
+    #     'Graphs/Graphs_Motifs/PatternTechnique3/' + 'Overlaying_A_B_sub-sequences_for_AB-join' + datetime.now().strftime(
+    #         "%Y%m%d-%H%M%S") + '.png')
+    ###### plt.show()
 
 
 def get_mp_data_data_analysis(A_start_period, A_end_period, B_start_period, B_end_period, A_mp_ids, B_mp_ids,level, include_missing_mp= False):
