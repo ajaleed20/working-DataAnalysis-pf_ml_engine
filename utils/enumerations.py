@@ -78,7 +78,7 @@ class data_analysis(enum.Enum):
     thresholds = [300, 200, 100]
 
 
-    #For pattern_technique2.py with Query patter
+    #For pattern_technique2.py with Query pattern Technique
     Q_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     Q_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
 
