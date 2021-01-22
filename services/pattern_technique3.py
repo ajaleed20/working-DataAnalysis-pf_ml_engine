@@ -30,14 +30,16 @@ def get_stumpy_query_pattern(A_df,B_df):
     B_res_df[B_res_df.columns[1]] = B_res_df[B_res_df.columns[1]].replace(0, np.nan)
     B_res_df.dropna(inplace=True)
 
-    # plotting AB-JOIN time series along provided date range:
-    fig, axs = plt.subplots(2, sharex=True, gridspec_kw={'hspace': 0})
-    plt.suptitle('AB-JOIN Pattern Recognition Subsequences', fontsize='7')
-    axs[0].set_title('Pattern For Subsequence A', fontsize=5, y=0)
-    axs[1].set_title('Pattern For Subsequence B', fontsize=5, y=0)
-    axs[1].set_xlabel('Time')
-    axs[0].set_ylabel('Pattern A Values', fontsize=5)
-    axs[1].set_ylabel('Pattern B Values', fontsize=5)
+    # plotting AB-JOIN time series along provided date range: , sharex=False, gridspec_kw={'hspace': 0}
+    fig, axs = plt.subplots(2,figsize=(10,10))
+    plt.suptitle('AB-JOIN Pattern Recognition Sequences For Original Data', fontsize='15', fontweight='bold')
+    axs[0].set_title('Original Data For Sequence A', fontsize=8, y=0, fontweight='bold')
+    axs[1].set_title('Original Data For Sequence B', fontsize=8, y=0, fontweight='bold')
+    #axs[1].set_xlabel('Time')
+    #axs[0].set_xlabel('Sequence A Index', fontsize=4, fontweight='bold')
+    #axs[1].set_xlabel('Sequence B Index', fontsize=4, fontweight='bold')
+    axs[0].set_ylabel('Sequence A Values', fontsize=8, fontweight='bold')
+    axs[1].set_ylabel('Sequence B Values', fontsize=8, fontweight='bold')
     # ylim_lower = -25
     # ylim_upper = 25
     # axs[0].set_ylim(ylim_lower, ylim_upper)
@@ -45,17 +47,9 @@ def get_stumpy_query_pattern(A_df,B_df):
     axs[0].plot(A_res_df[A_res_df.columns[1]], c='green')
     axs[1].plot(B_res_df[B_res_df.columns[1]], c='orange')
     plt.autoscale()
-    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'AB-Join-Pattern-OriginalData_graphs_' + datetime.now().strftime(
+    fig.tight_layout(pad=3.0)
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'OriginalData_Graphs_for_A_and_B_' + datetime.now().strftime(
         "%Y%m%d-%H%M%S") + '.png')
-    plt.show()
-
-    # plt.suptitle('Query Subsequence, Q_df', fontsize='10')
-    # plt.xlabel('Time', fontsize='5', y=0)
-    # plt.ylabel('Values', fontsize='7')
-    # plt.plot(B_res_df[B_res_df.columns[0]],B_res_df[B_res_df.columns[1]], lw=1, color="green")
-    # plt.xticks(rotation=70, weight='bold', fontsize=5)
-    # plt.xticks(weight='bold', fontsize=5)
-    # plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'Motif_Query_Pattern_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
 
     days_dict = {
         "Three-min": 6,
@@ -82,48 +76,63 @@ def get_stumpy_query_pattern(A_df,B_df):
     TB_ClosestMatch_in_TA = stumpy.stump(T_A=B_res_df[B_res_df.columns[1]], m=m, T_B=A_res_df[A_res_df.columns[1]],ignore_trivial=False)
 
     TA_ClosestMatch_in_TB_index = TA_ClosestMatch_in_TB[:, 0].argmin()
-    plt.xlabel('Subsequence')
-    plt.ylabel('Matrix Profile')
+    plt.clf()
+    plt.suptitle('Matrix Profile with Global Minima', fontsize='15', fontweight='bold')
+    plt.xlabel('Index')
+    plt.ylabel('Euclidean Distance')
     plt.scatter(TA_ClosestMatch_in_TB_index, TA_ClosestMatch_in_TB[TA_ClosestMatch_in_TB_index, 0], c='red', s=100)
     plt.plot(TA_ClosestMatch_in_TB[:, 0])
-    #plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'MatrixProfile_for_AB-Join' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
-    print(f'For each subsequence in T_A time-series data, closest in T_B is at index {TA_ClosestMatch_in_TB_index} in T_B time-series data:GlobalMinima')
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'MatrixProfile_for_AB-Join' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
+    print(f'GlobalMinima: For each subsequence in T_A, the motif is located at index {TA_ClosestMatch_in_TB_index} of T_A time-series')
 
     ClosestMatch_in_TB_index = TA_ClosestMatch_in_TB[TA_ClosestMatch_in_TB_index, 1]
     print(f'The motif is located at index {ClosestMatch_in_TB_index} of T_B time-series')
 
-    # TB_ClosestMatch_in_TA_index = TB_ClosestMatch_in_TA[:, 0].argmin()
-    # plt.xlabel('Subsequence')
-    # plt.ylabel('Matrix Profile')
-    # plt.scatter(TB_ClosestMatch_in_TA_index, TB_ClosestMatch_in_TA[TB_ClosestMatch_in_TA_index, 0], c='red', s=100)
-    # plt.plot(TB_ClosestMatch_in_TA[:, 0])
-    # plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'MatrixProfile_for_B' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
-    # print(f'For each Pattern in T_B time-series data, the motif is located at index {TB_ClosestMatch_in_TA_index} in T_B time-series data')
-
-    #Overlaying The Best Matching Motif for T_A in T_B
+    plt.clf()
     temp_A = A_res_df[A_res_df.columns[1]]
     temp_B = B_res_df[B_res_df.columns[1]]
+    plt.suptitle('Matching_Pattern_in_sub-sequence_A', fontsize='15', fontweight='bold')
+    plt.plot(temp_A.iloc[TA_ClosestMatch_in_TB_index: TA_ClosestMatch_in_TB_index + m], label='Pattern A')
+    plt.autoscale()
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'Matching_Pattern_in_sub-sequence_A' + datetime.now().strftime(
+            "%Y%m%d-%H%M%S") + '.png')
+    #plt.show()
+    plt.clf()
+    plt.suptitle('Matching_Pattern_in_sub-sequence_B', fontsize='15', fontweight='bold')
+    plt.autoscale()
+    plt.plot(temp_B.iloc[ClosestMatch_in_TB_index: ClosestMatch_in_TB_index + m], label='Pattern B')
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'Matching_Pattern_in_sub-sequence_B' + datetime.now().strftime(
+        "%Y%m%d-%H%M%S") + '.png')
+
+    plt.clf()
+    plt.suptitle('Overlaying The Best Matching Motif for AB-Join', fontsize='15', fontweight='bold')
     plt.plot(temp_A.iloc[TA_ClosestMatch_in_TB_index: TA_ClosestMatch_in_TB_index + m], label='Pattern A')
     plt.plot(temp_B.iloc[ClosestMatch_in_TB_index: ClosestMatch_in_TB_index + m], label='Pattern B')
-    plt.xlabel('Time')
-    plt.ylabel('Pattern Values')
     plt.legend()
+    plt.ylabel('Pattern Values')
+    plt.autoscale()
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'Overlaying_A_B_sub-sequences_for_AB-join' + datetime.now().strftime(
-        "%Y%m%d-%H%M%S") + '.png')
-    plt.show()
-    #####
-    # # Overlaying The Best Matching Motif for T_B in T_A
-    # temp_A = A_res_df[A_res_df.columns[1]]
-    # temp_B = B_res_df[B_res_df.columns[1]]
-    # plt.plot(temp_A.iloc[TA_ClosestMatch_in_TB_index: TA_ClosestMatch_in_TB_index + m], label='Pattern A')
-    # plt.plot(temp_B.iloc[TB_ClosestMatch_in_TA_index: TB_ClosestMatch_in_TA_index + m], label='Pattern B')
-    # plt.xlabel('Time')
-    # plt.ylabel('Pattern Values')
-    # plt.legend()
-    # plt.savefig(
-    #     'Graphs/Graphs_Motifs/PatternTechnique3/' + 'Overlaying_A_B_sub-sequences_for_AB-join' + datetime.now().strftime(
-    #         "%Y%m%d-%H%M%S") + '.png')
-    ###### plt.show()
+            "%Y%m%d-%H%M%S") + '.png')
+    #
+    # chk_df = pd.DataFrame()
+    # chk_df = pd.DataFrame(TA_ClosestMatch_in_TB)
+    # #chk_df=TA_ClosestMatch_in_TB
+    # chk_df.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique3/' + 'Matrix_Profile_AB-Join' + datetime.now().strftime(
+    #     "%Y%m%d-%H%M%S") + '.csv',
+    #         index=False, header=True)
+
+    appended_data = pd.DataFrame()
+    data = A_res_df[TA_ClosestMatch_in_TB_index: TA_ClosestMatch_in_TB_index + m]
+    data.columns = ['A_ts_'+str(TA_ClosestMatch_in_TB_index), 'index_'+ str(TA_ClosestMatch_in_TB_index)]
+    data.reset_index(inplace=True)
+    appended_data = data
+    data = B_res_df[ClosestMatch_in_TB_index: ClosestMatch_in_TB_index + m]
+    data.columns = ['B_ts_'+str(ClosestMatch_in_TB_index), 'index_'+ str(ClosestMatch_in_TB_index)]
+    data.reset_index(inplace=True)
+    appended_data = pd.concat([appended_data, data], axis=1)
+    appended_data.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique3/' +  'AB-Join_MotifData_ClosestMatch_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
+                             index=False, header=True)
+
 
 
 def get_mp_data_data_analysis(A_start_period, A_end_period, B_start_period, B_end_period, A_mp_ids, B_mp_ids,level, include_missing_mp= False):

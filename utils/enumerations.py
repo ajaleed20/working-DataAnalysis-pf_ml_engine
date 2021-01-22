@@ -86,10 +86,10 @@ class data_analysis(enum.Enum):
     # For pattern_technique3.py with AB JOIN Technique
     A_stumpy_measuringpoint_var = [1492]
     B_stumpy_measuringpoint_var = [1491]
-    A_start_period = '11-01-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    A_end_period = '11-11-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    B_start_period = '10-01-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    B_end_period = '10-11-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    A_start_period = '10-25-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    A_end_period = '11-09-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    B_start_period = '10-25-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    B_end_period = '11-09-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
 
 
     # General purpose variables for all implementations
