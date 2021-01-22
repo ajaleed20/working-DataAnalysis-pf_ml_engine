@@ -113,7 +113,8 @@ def get_stumpy_query_pattern(A_df,B_df):
     plt.autoscale()
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'Overlaying_A_B_sub-sequences_for_AB-join' + datetime.now().strftime(
             "%Y%m%d-%H%M%S") + '.png')
-    #
+
+    # checking matrix profile data
     # chk_df = pd.DataFrame()
     # chk_df = pd.DataFrame(TA_ClosestMatch_in_TB)
     # #chk_df=TA_ClosestMatch_in_TB
