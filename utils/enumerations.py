@@ -67,11 +67,12 @@ class GanualityLevel(enum.Enum):
 
 class data_analysis(enum.Enum):
     # For Patterns.py Implementation
-    stumpy_measuringpoint_var = [1492]
+    stumpy_measuringpoint_var = [1491]
+    Q_stumpy_measuringpoint_var = [1492]
     # For DataAnalysis.py Implementation
     measuringpoint_var = [1492, 1491, 1493]
-    start_period = '08-20-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    end_period = '09-01-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    start_period = '06-20-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    end_period = '07-01-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     Filename_Analysis = 'DataAnalysis'
     Filename_Threshold = 'Data_Above_Threshold'
     thresholds = [300, 200, 100]
@@ -85,9 +86,9 @@ class data_analysis(enum.Enum):
     # For pattern_technique3.py with AB JOIN Technique
     A_stumpy_measuringpoint_var = [1492]
     B_stumpy_measuringpoint_var = [1491]
-    A_start_period = '10-25-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    A_end_period = '11-09-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    B_start_period = '10-25-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    A_start_period = '11-09-2020T22:50:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    A_end_period = '11-09-2020T23:30:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    B_start_period = '11-01-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     B_end_period = '11-09-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
 
 

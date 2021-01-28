@@ -95,6 +95,18 @@ def get_stumpy_query_pattern(df,Q_df):
         plt.autoscale()
         plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'OriginalData_graphs_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
 
+        plt.clf()
+        plt.suptitle('Overlaying The Best Matching Motif', fontsize='15', fontweight='bold')
+        plt.plot(Q_res_df[Q_res_df.columns[1]].values, label='Query Pattern')
+        plt.plot(temp_res_df[idx:idx + len(Q_res_df)].values, label='Matching Pattern')
+        plt.legend()
+        plt.ylabel('Pattern Values')
+        #plt.autoscale()
+        plt.savefig(
+            'Graphs/Graphs_Motifs/PatternTechnique2/' + 'Overlaying_sub-sequences_for_motif' + datetime.now().strftime(
+                "%Y%m%d-%H%M%S") + '.png')
+
+
         appended_data = pd.DataFrame()
         data = res_df[idx:idx + len(Q_res_df)]
         data.columns = ['ts_'+str(idx), 'Data_'+ str(idx)]
@@ -130,6 +142,7 @@ def get_stumpy_query_pattern(df,Q_df):
         plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Matching_Pattern_From_OriginalData' + datetime.now().strftime(
             "%Y%m%d-%H%M%S") + '.png')
 
+
         # This simply returns the (sorted) positional indices of the top 16 smallest distances found in the distance_profile
         k = 5
         idxs = np.argpartition(distance_profile, k)[:k]
@@ -154,10 +167,10 @@ def get_stumpy_query_pattern(df,Q_df):
                 "%Y%m%d-%H%M%S") + '.png')
 
 
-def get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_period, mp_ids, level, include_missing_mp= False):
+def get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_period, mp_ids, Q_mp_ids,level, include_missing_mp= False):
     dfs, missing_mp_ids = data_service.get_data_by_ids_period_and_level(start_period, end_period, mp_ids,
                                                                                       level, include_missing_mp)
-    Q_dfs, Q_missing_mp_ids = data_service.get_data_by_ids_period_and_level(Q_start_period, Q_end_period, mp_ids,
+    Q_dfs, Q_missing_mp_ids = data_service.get_data_by_ids_period_and_level(Q_start_period, Q_end_period, Q_mp_ids,
                                                                         level, include_missing_mp)
 
     res_df = pd.DataFrame({'ts': pd.date_range(start=start_period, end=end_period, freq=get_freq_by_level(level))})
@@ -185,15 +198,15 @@ def get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_pe
 
     get_stumpy_query_pattern(res_df, Q_res_df)
 
-def execute_data_analysis(mpid_var, start_period, end_period,granularity_level,Q_start_period, Q_end_period):
-   get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_period, mpid_var, granularity_level)
+def execute_data_analysis(mpid_var, Q_mpid_var,start_period, end_period,granularity_level,Q_start_period, Q_end_period):
+   get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_period, mpid_var,Q_mpid_var, granularity_level)
 
 
 instance = data_analysis.instance.value
 config_oauth(config.get_current_config())
 
 try:
-    execute_data_analysis(data_analysis.stumpy_measuringpoint_var.value, data_analysis.start_period.value, data_analysis.end_period.value,data_analysis.granularity.value,data_analysis.Q_start_period.value, data_analysis.Q_end_period.value)
+    execute_data_analysis(data_analysis.stumpy_measuringpoint_var.value, data_analysis.Q_stumpy_measuringpoint_var.value, data_analysis.start_period.value,data_analysis.end_period.value,data_analysis.granularity.value,data_analysis.Q_start_period.value, data_analysis.Q_end_period.value)
     print("\nEnd of program successful run with files  saved to DataAnalysis and Graph folders, inside project folder:services.")
     exit()
 except Exception as e:
