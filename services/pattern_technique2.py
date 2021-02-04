@@ -35,10 +35,10 @@ def get_stumpy_query_pattern(df,Q_df):
     plt.suptitle('Query Subsequence, Q_df', fontsize='10')
     plt.xlabel('Time', fontsize='5', y=0)
     plt.ylabel('Values', fontsize='7')
-    plt.plot(Q_res_df[Q_res_df.columns[0]],Q_res_df[Q_res_df.columns[1]], lw=1, color="green")
+    plt.plot(Q_res_df[Q_res_df.columns[1]], lw=1, color="green")
     plt.xticks(rotation=70, weight='bold', fontsize=5)
     plt.xticks(weight='bold', fontsize=5)
-    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Motif_Query_Pattern_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
+    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Query_Pattern_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
 
     days_dict = {
         "Three-min": 6,
@@ -53,11 +53,33 @@ def get_stumpy_query_pattern(df,Q_df):
     distance_profile = stumpy.core.mass(Q_res_df[Q_res_df.columns[1]], res_df[res_df.columns[1]])
     idx = np.argmin(distance_profile)
 
-    if (distance_profile[idx] > 30):
+    max_val_res_df = res_df[res_df.columns[1]].max()
+    max_val_Q_df = Q_res_df[Q_res_df.columns[1]].max()
+    print(f"The max value in original series is {max_val_res_df} ")
+    print(f"The max value in Query series is {max_val_Q_df} ")
+    data = res_df
+    data.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique2/' + 'Total_MotifData_for_max_val' + str(idx)
+                         + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
+                         index=False, header=True)
+
+
+    if (distance_profile[idx] > 60):
         print(f"The global minimum is above considerable range of motif detection")
     else:
         print(f"The nearest neighbor to `Query Pattern` is located at index {idx} in `Original Data`")
+        temp_ts_res_df = res_df[res_df.columns[0]]
         temp_res_df = res_df[res_df.columns[1]]
+        # plotting found motif time series (sub-sequence) along datetime
+        plt.clf()
+        plt.suptitle('Motif Subsequence', fontsize='10')
+        plt.xlabel('Time', fontsize='5', y=0)
+        plt.ylabel('Values', fontsize='7')
+        plt.plot(temp_res_df.values[idx:idx + len(Q_res_df)], lw=1, color="green")
+        plt.xticks(rotation=70, weight='bold', fontsize=5)
+        plt.xticks(weight='bold', fontsize=5)
+        plt.autoscale()
+        plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Motif_Pattern_' + datetime.now().strftime(
+            "%Y%m%d-%H%M%S") + '.png')
         # plotting z normalization for query subsequence and provided time-series in temp_res_df
         Q_z_norm = stumpy.core.z_norm(Q_res_df[Q_res_df.columns[1]].values)
         T_z_norm = stumpy.core.z_norm(temp_res_df.values[idx:idx + len(Q_res_df)])
@@ -151,18 +173,10 @@ def get_stumpy_query_pattern(df,Q_df):
         fig.set_size_inches(75, 75)
         plt.rcParams['axes.linewidth'] = 5.5
         plt.title('Original Dataset with Matching Query pattern', fontsize='80', fontweight="bold")
-        # plt.xlabel('Time', fontsize='20')
-        # plt.ylabel('Acceleration', fontsize='20')
         plt.plot(res_df[res_df.columns[1]])
         plt.autoscale()
-        # plt.text(2000, 4.5, 'Cement', color="black", fontsize=20)
-        # plt.text(10000, 4.5, 'Cement', color="black", fontsize=20)
-        # ax = plt.gca()
-        # rect = Rectangle((5000, -4), 3000, 10, facecolor='lightgrey')
-        # ax.add_patch(rect)
-        # plt.text(6000, 4.5, 'Carpet', color="black", fontsize=20)
         for idx in idxs:
-            plt.plot(range(idx, idx + len(Q_res_df)), temp_res_df.values[idx:idx + len(Q_res_df)], lw=2)
+            plt.plot(range(idx, idx + len(Q_res_df)), temp_res_df.values[idx:idx + len(Q_res_df)], lw=2, color = idx)
         plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'k_Closest_Matching_Patterns' + datetime.now().strftime(
                 "%Y%m%d-%H%M%S") + '.png')
 
@@ -175,26 +189,30 @@ def get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_pe
 
     res_df = pd.DataFrame({'ts': pd.date_range(start=start_period, end=end_period, freq=get_freq_by_level(level))})
 
+    #res_df['ts'] = res_df['ts'].dt.tz_convert('Europe/Berlin')
+
     res_df['ts'] = res_df['ts'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
 
     Q_res_df = pd.DataFrame({'ts': pd.date_range(start=Q_start_period, end=Q_end_period, freq=get_freq_by_level(level))})
 
     Q_res_df['ts'] = Q_res_df['ts'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
 
+    #Q_res_df['ts'] = Q_res_df['ts'].dt.tz_convert('Europe/Berlin')
+
     for df in dfs:
         res_df = pd.merge(res_df, df, on='ts', how='outer')
     res_df.sort_values(by=['ts'], inplace=True)
     res_df = res_df.drop_duplicates().reset_index(drop=True)
-    res_df = res_df.fillna(method='ffill')
-    res_df.dropna(inplace=True)
+    #res_df = res_df.fillna(method='ffill')
+    #res_df.dropna(inplace=True)
 
     for Q_df in Q_dfs:
         Q_res_df = pd.merge(Q_res_df, Q_df, on='ts', how='outer')
 
     Q_res_df.sort_values(by=['ts'], inplace=True)
     Q_res_df = Q_res_df.drop_duplicates().reset_index(drop=True)
-    Q_res_df = Q_res_df.fillna(method='ffill')
-    Q_res_df.dropna(inplace=True)
+    #Q_res_df = Q_res_df.fillna(method='ffill')
+    #Q_res_df.dropna(inplace=True)
 
     get_stumpy_query_pattern(res_df, Q_res_df)
 

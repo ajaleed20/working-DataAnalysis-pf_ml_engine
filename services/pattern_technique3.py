@@ -59,7 +59,8 @@ def get_stumpy_query_pattern(A_df,B_df):
         "Twenty-min": 40,
         "Half-Hour": 60,
     }
-    m = days_dict['Half-Hour']
+    #m = days_dict['Half-Hour']
+    m = len(A_res_df)
 
    ###############################################################################################################
    ## As a brief about the matrix profile data structure, each row of "TA_ClosestMatch_in_TB"             ##
@@ -82,6 +83,7 @@ def get_stumpy_query_pattern(A_df,B_df):
     plt.ylabel('Euclidean Distance')
     plt.scatter(TA_ClosestMatch_in_TB_index, TA_ClosestMatch_in_TB[TA_ClosestMatch_in_TB_index, 0], c='red', s=100)
     plt.plot(TA_ClosestMatch_in_TB[:, 0])
+    plt.autoscale()
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique3/' + 'MatrixProfile_for_AB-Join' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
     print(f'GlobalMinima: For each subsequence in T_A, the motif is located at index {TA_ClosestMatch_in_TB_index} of T_A time-series')
 
