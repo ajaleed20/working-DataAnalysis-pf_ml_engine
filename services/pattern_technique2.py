@@ -20,10 +20,12 @@ import sys
 def create_heatmap_bar_plot(df):
     plt.clf()
     heatmap1_data = pd.pivot_table(df, values='1493', columns='ts')
-    plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'LineGraph_increasing_values' + datetime.now().strftime(
+    df['ts'] = df['ts'].astype('str')
+    df['1493'] = df['1493'].astype('str')
+    heat = sns.heatmap(heatmap1_data, cmap="YlGnBu")
+    figure = heat.get_figure()
+    figure.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'LineGraph_increasing_values' + datetime.now().strftime(
         "%Y%m%d-%H%M%S") + '.png')
-    sns.heatmap(heatmap1_data, cmap="YlGnBu")
-
     plt.show()
 
     plt.clf()
