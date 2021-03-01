@@ -5,6 +5,8 @@ from services import data_service
 import pandas as pd
 import config
 import numpy as np
+# import matplotlib
+# matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 import seaborn as sns
 import stumpy
@@ -19,14 +21,66 @@ import sys
 
 def create_heatmap_bar_plot(df):
     plt.clf()
-    heatmap1_data = pd.pivot_table(df, values='1493', columns='ts')
+    #fig, ax = plt.subplots(figsize=(20, 20))
+    # plt.figure(figsize=(50, 25))
+   # plt.title('Heatmap for ' + str(df.columns[1]), fontsize=20, fontweight="bold")
+    #ax = plt.axes()
+    #ax.set_xticklabels(df['ts'].dt.strftime('%d-%m-%Y'))
+    # fig, ax = plt.subplots(figsize=(20, 20))
+    df['ts'] = df['ts'].dt.strftime('%d-%m-%Y-%hh-%mm-%ss')
     df['ts'] = df['ts'].astype('str')
-    df['1493'] = df['1493'].astype('str')
-    heat = sns.heatmap(heatmap1_data, cmap="YlGnBu")
+    heatmap1_data = pd.pivot_table(df, values=df.columns[1], columns=df.columns[0],fill_value=1)
+    # df['ts'] = df['ts'].dt.strftime('%d-%m-%Y')
+    # df['ts'] = df['ts'].astype('str')
+    df[df.columns[1]] = df[df.columns[1]].astype('str')
+    #sns.set(font_scale=5.0)
+
+    heat = sns.heatmap(heatmap1_data, fmt="g",cmap='YlOrRd') # cmap="YlGnBu")
+    #ax.set_xticklabels(df['ts'].dt.strftime('%d-%m-%Y'))
+    heat.set_title('Heatmap of '+ str(df.columns[1]), fontsize=5)
+    # heat.set_xticklabels(heat.get_xticklabels(), rotation=30)
+    # heat.set_xticklabels(heat.get_xmajorticklabels(), fontsize = 18, rotation=45)
+    #heat.set_yticklabels(heat.get_ymajorticklabels(), fontsize = 18)
+    # res.set_xticklabels(res.get_xmajorticklabels(), fontsize = 18)
+    # res.set_yticklabels(res.get_ymajorticklabels(), fontsize = 18)
+    #sns.heatmap(train_set1, annot=True, fmt='g', cmap='viridis')
     figure = heat.get_figure()
-    figure.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'LineGraph_increasing_values' + datetime.now().strftime(
+    figure.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'HeatMap_for_'+ str(df.columns[1]) +'_'+ datetime.now().strftime(
         "%Y%m%d-%H%M%S") + '.png')
     plt.show()
+
+    #
+    # plt.clf()
+    # #plt.figure(figsize=(45, 45))
+    # fig, ax = plt.subplots(figsize=(70, 30))  # Sample figsize in inches
+    # plt.xticks(rotation=70, weight='bold', fontsize=15)
+    # plt.yticks(rotation=70, weight='bold', fontsize=15)
+    #
+    # # sns.heatmap(df1.iloc[:, 1:6:], annot=True, linewidths=.5, ax=ax)
+    # ##     #
+    # heatmap1_data = pd.pivot_table(df, values='1493', columns='ts', fill_value=1)
+    # df['ts'] = df['ts'].astype('str')
+    # df['1493'] = df['1493'].astype('str')
+    # heat = sns.heatmap(heatmap1_data, cmap="YlGnBu", fmt = "d", ax=ax)
+    # # sns.heatmap(train_set1, annot=True, fmt='g', cmap='viridis')
+    # figure = heat.get_figure()
+    # figure.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'LineGraph_increasing_values' + datetime.now().strftime(
+    #     "%Y%m%d-%H%M%S") + '.png')
+    # plt.show()
+
+    #####################################running##########################################
+    # plt.clf()
+    # heatmap1_data = pd.pivot_table(df, values='1493', columns='ts',fill_value=1)
+    # df['ts'] = df['ts'].astype('str')
+    # df['1493'] = df['1493'].astype('str')
+    # heat = sns.heatmap(heatmap1_data, annot=True, fmt="g",cmap='viridis') # cmap="YlGnBu")
+    # #sns.heatmap(train_set1, annot=True, fmt='g', cmap='viridis')
+    # figure = heat.get_figure()
+    # figure.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'LineGraph_increasing_values' + datetime.now().strftime(
+    #     "%Y%m%d-%H%M%S") + '.png')
+    # plt.show()
+#####################################running##########################################
+
 
     plt.clf()
     sns.heatmap(df[df.columns[1]], annot = 'true' , cmap = 'coolwarm')
@@ -44,27 +98,38 @@ def create_heatmap_bar_plot(df):
     sns.heatmap(df['1493'])
     plt.show()
 
-
-
-
 def get_stumpy_query_pattern(df,Q_df):
-    #for original time series sequence
-    res_df = df
-    res_df.dropna(inplace=True)
-    res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
-    res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace(0, np.nan)
-    res_df.dropna(inplace=True)
+    data = df
+    if (len(df.columns) == 1) or (len(Q_df.columns) == 1) :
+        #for original time series sequence
+        res_df = df
+        res_df.dropna(inplace=True)
+        res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
+        res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace(0, np.nan)
+        res_df.dropna(inplace=True)
 
-    # for query/input time series (sub-sequence)
-    Q_res_df = Q_df
-    Q_res_df.dropna(inplace=True)
-    Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
-    Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace(0, np.nan)
-    Q_res_df.dropna(inplace=True)
+        # for query/input time series (sub-sequence)
+        Q_res_df = Q_df
+        Q_res_df.dropna(inplace=True)
+        Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
+        Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace(0, np.nan)
+        Q_res_df.dropna(inplace=True)
+
+        data = res_df
+        data.to_csv(
+            'DataAnalysis/MotifDataAnalysis/PatternTechnique2/' + 'FillingTime_RKPIs_Data_' + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
+            index=False, header=True)
+
+    else:
+        data.to_csv(
+            'DataAnalysis/MotifDataAnalysis/PatternTechnique2/' + 'FillingTime_RKPIs_Data_' + '_' + datetime.now().strftime(
+                "%Y%m%d-%H%M%S") + '.csv',
+            index=False, header=True)
+
+    # create_heatmap_bar_plot(res_df)
 
 
-    create_heatmap_bar_plot(res_df)
-
+    plt.clf()
     # plotting query/input time series (sub-sequence) along datetime
     plt.suptitle('Query Subsequence, Q_df', fontsize='10')
     plt.xlabel('Time', fontsize='5', y=0)
@@ -163,6 +228,7 @@ def get_stumpy_query_pattern(df,Q_df):
                 "%Y%m%d-%H%M%S") + '.png')
 
 
+
         appended_data = pd.DataFrame()
         data = res_df[idx:idx + len(Q_res_df)]
         data.columns = ['ts_'+str(idx), 'Data_'+ str(idx)]
@@ -172,7 +238,7 @@ def get_stumpy_query_pattern(df,Q_df):
         data.columns = ['ts_Query_Motif' , 'Query_Motif_Data']
         data.reset_index(inplace=True)
         appended_data = pd.concat([appended_data, data], axis=1)
-        appended_data.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique2/' +  'MotifData_for_' + str(idx)
+        appended_data.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique2/' +  'MotifData_for_' + str(res_df.columns[1])
                                  + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
                                  index=False, header=True)
         plt.clf()

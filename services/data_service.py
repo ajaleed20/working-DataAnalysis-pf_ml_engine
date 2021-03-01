@@ -22,7 +22,25 @@ def get_data_by_ids_period_and_level(start_period, end_period, mp_ids, level=Gan
             mp_dict = dict(enumerate(data[str(id)]))
             df = pd.DataFrame.from_dict(mp_dict, "index")
             df.drop(columns='Description', axis=1, inplace=True)
-            df.columns = ['ts', str(id)]
+            #df.columns = ['ts', str(id)]  running code, single line
+
+            if id == 660:
+                df.columns = ['ts', 'Article_'+str(id)]
+            elif id == 13749:
+                df.columns = ['ts', 'StatusFillingValveFiller-'+str(id)]
+            elif id == 1637:
+                df.columns = ['ts', 'FillingTime_' + str(id)]
+            elif id == 1958:
+                df.columns = ['ts', 'FillingStateValve_' + str(id)]
+            elif id == 1797:
+                df.columns = ['ts', 'FillingValueValve_' + str(id)]
+            elif id == 557:
+                df.columns = ['ts', 'FillingOrganUnderfilled_' + str(id)]
+            elif id == 567:
+                df.columns = ['ts', 'FillingOrganOverfilled_' + str(id)]
+            else:
+                df.columns = ['ts', str(id)]
+
             df['ts'] = pd.to_datetime(df['ts'])
             df['ts'] = df['ts'].dt.tz_localize('UTC').dt.tz_convert('Europe/Berlin')
             dfs.append(df)
