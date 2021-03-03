@@ -91,43 +91,49 @@ def create_heatmap_bar_plot(df):
     # plt.plot(df[df.columns[0]], df[df.columns[1]])
     # plt.xticks(rotation=70)
 
-
     plt.show()
-
     plt.clf()
-    sns.heatmap(df['1493'])
-    plt.show()
+
+def get_stumpy_query_pattern_filling_time_relevant_kpis(df,Q_df):
+    #for original time series sequence
+    res_df = df
+    res_df.dropna(axis=0, how='all', inplace=True)
+    res_df = res_df.replace(np.nan, 'NA', regex=True)
+
+    # for query/input time series (sub-sequence)
+    Q_res_df = Q_df
+    Q_res_df.dropna(axis=0, how='all', inplace=True)
+    Q_res_df = Q_res_df.replace(np.nan, 'NA', regex=True)
+
+    res_df.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique2/' + 'FillingTime_RKPIs_Data_' + '_' + datetime.now().strftime(
+                "%Y%m%d-%H%M%S") + '.csv',index=False, header=True)
 
 def get_stumpy_query_pattern(df,Q_df):
-    data = df
-    if (len(df.columns) == 1) or (len(Q_df.columns) == 1) :
-        #for original time series sequence
-        res_df = df
-        res_df.dropna(inplace=True)
-        res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
-        res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace(0, np.nan)
-        res_df.dropna(inplace=True)
 
-        # for query/input time series (sub-sequence)
-        Q_res_df = Q_df
-        Q_res_df.dropna(inplace=True)
-        Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
-        Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace(0, np.nan)
-        Q_res_df.dropna(inplace=True)
+    days_dict={
+        "Three-min": 6,
+        "Five-min": 10,
+        "Ten-min": 20,
+        "Fifteen-min": 30,
+        "Twenty-min": 40,
+        "Half-Hour": 60,
+    }
 
-        data = res_df
-        data.to_csv(
-            'DataAnalysis/MotifDataAnalysis/PatternTechnique2/' + 'FillingTime_RKPIs_Data_' + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv',
-            index=False, header=True)
+    res_df = df
+    res_df.dropna(inplace=True)
+    res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
+    res_df[res_df.columns[1]] = res_df[res_df.columns[1]].replace(0, np.nan)
+    res_df.dropna(inplace=True)
 
-    else:
-        data.to_csv(
-            'DataAnalysis/MotifDataAnalysis/PatternTechnique2/' + 'FillingTime_RKPIs_Data_' + '_' + datetime.now().strftime(
-                "%Y%m%d-%H%M%S") + '.csv',
-            index=False, header=True)
+    # for query/input time series (sub-sequence)
+    Q_res_df = Q_df
+    Q_res_df.dropna(axis=0, how='all', inplace=True)
+    Q_res_df.dropna(inplace=True)
+    Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace([np.inf, -np.inf], np.nan)
+    Q_res_df[Q_res_df.columns[1]] = Q_res_df[Q_res_df.columns[1]].replace(0, np.nan)
+    Q_res_df.dropna(inplace=True)
 
     # create_heatmap_bar_plot(res_df)
-
 
     plt.clf()
     # plotting query/input time series (sub-sequence) along datetime
@@ -138,15 +144,6 @@ def get_stumpy_query_pattern(df,Q_df):
     plt.xticks(rotation=70, weight='bold', fontsize=5)
     plt.xticks(weight='bold', fontsize=5)
     plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Query_Pattern_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.png')
-
-    days_dict = {
-        "Three-min": 6,
-        "Five-min": 10,
-        "Ten-min": 20,
-        "Fifteen-min": 30,
-        "Twenty-min": 40,
-        "Half-Hour": 60,
-    }
 
     # Since MASS computes z-normalized Euclidean distances, we should z-normalize our subsequences before plotting
     distance_profile = stumpy.core.mass(Q_res_df[Q_res_df.columns[1]], res_df[res_df.columns[1]])
@@ -227,8 +224,6 @@ def get_stumpy_query_pattern(df,Q_df):
             'Graphs/Graphs_Motifs/PatternTechnique2/' + 'Overlaying_sub-sequences_for_motif' + datetime.now().strftime(
                 "%Y%m%d-%H%M%S") + '.png')
 
-
-
         appended_data = pd.DataFrame()
         data = res_df[idx:idx + len(Q_res_df)]
         data.columns = ['ts_'+str(idx), 'Data_'+ str(idx)]
@@ -264,7 +259,6 @@ def get_stumpy_query_pattern(df,Q_df):
         plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'Matching_Pattern_From_OriginalData' + datetime.now().strftime(
             "%Y%m%d-%H%M%S") + '.png')
 
-
         # This simply returns the (sorted) positional indices of the top 16 smallest distances found in the distance_profile
         k = 5
         idxs = np.argpartition(distance_profile, k)[:k]
@@ -280,13 +274,16 @@ def get_stumpy_query_pattern(df,Q_df):
         plt.savefig('Graphs/Graphs_Motifs/PatternTechnique2/' + 'k_Closest_Matching_Patterns' + datetime.now().strftime(
                 "%Y%m%d-%H%M%S") + '.png')
 
-
 def get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_period, mp_ids, Q_mp_ids,level, include_missing_mp= False):
-    dfs, missing_mp_ids = data_service.get_data_by_ids_period_and_level(start_period, end_period, mp_ids,
-                                                                                      level, include_missing_mp)
-    Q_dfs, Q_missing_mp_ids = data_service.get_data_by_ids_period_and_level(Q_start_period, Q_end_period, Q_mp_ids,
-                                                                        level, include_missing_mp)
 
+    if (data_analysis.FillingTime.value):
+        dfs, missing_mp_ids     = data_service.get_data_by_ids_period_and_level_for_filling_time_relevant_kpis(start_period,end_period, mp_ids,level, include_missing_mp)
+        Q_dfs, Q_missing_mp_ids = data_service.get_data_by_ids_period_and_level_for_filling_time_relevant_kpis(Q_start_period, Q_end_period, Q_mp_ids,level, include_missing_mp)
+    else:
+        dfs, missing_mp_ids = data_service.get_data_by_ids_period_and_level(start_period, end_period, mp_ids,
+                                                                            level, include_missing_mp)
+        Q_dfs, Q_missing_mp_ids = data_service.get_data_by_ids_period_and_level(Q_start_period, Q_end_period, Q_mp_ids,
+                                                                                level, include_missing_mp)
     res_df = pd.DataFrame({'ts': pd.date_range(start=start_period, end=end_period, freq=get_freq_by_level(level))})
 
     #res_df['ts'] = res_df['ts'].dt.tz_convert('Europe/Berlin')
@@ -314,11 +311,13 @@ def get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_pe
     #Q_res_df = Q_res_df.fillna(method='ffill')
     #Q_res_df.dropna(inplace=True)
 
-    get_stumpy_query_pattern(res_df, Q_res_df)
+    if (data_analysis.FillingTime.value):
+        get_stumpy_query_pattern_filling_time_relevant_kpis(res_df, Q_res_df)
+    else:
+        get_stumpy_query_pattern(res_df, Q_res_df)
 
 def execute_data_analysis(mpid_var, Q_mpid_var,start_period, end_period,granularity_level,Q_start_period, Q_end_period):
    get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_period, mpid_var,Q_mpid_var, granularity_level)
-
 
 instance = data_analysis.instance.value
 config_oauth(config.get_current_config())
