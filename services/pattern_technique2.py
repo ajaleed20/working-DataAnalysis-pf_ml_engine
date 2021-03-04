@@ -96,7 +96,7 @@ def create_heatmap_bar_plot(df):
 
 def get_stumpy_query_pattern_filling_time_relevant_kpis(df,Q_df):
     #for original time series sequence
-    df.dropna(thresh = 2, inplace=True)
+    df.dropna(thresh = 5, inplace=True)
     df = df = df.replace(r'^\s*$', np.nan, regex=True)
     df = df.replace(np.nan, 'NA', regex=True)
     #print(df.replace(r'^\s*$', np.nan, regex=True))
