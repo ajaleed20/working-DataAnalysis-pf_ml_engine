@@ -67,7 +67,7 @@ class GanualityLevel(enum.Enum):
 
 class data_analysis(enum.Enum):
     # For Patterns.py Implementation
-    stumpy_measuringpoint_var =  [660,1637,1958,13749,1797,557,567]
+    stumpy_measuringpoint_var = [660,1637,1958,13749,1797,557,567]
     Q_stumpy_measuringpoint_var = [557]
     # For DataAnalysis.py Implementation
     measuringpoint_var = [1492, 1491, 1493]

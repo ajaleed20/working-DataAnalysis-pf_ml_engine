@@ -96,11 +96,13 @@ def create_heatmap_bar_plot(df):
 
 def get_stumpy_query_pattern_filling_time_relevant_kpis(df,Q_df):
     #for original time series sequence
+    df.dropna(thresh = 2, inplace=True)
+    df = df = df.replace(r'^\s*$', np.nan, regex=True)
+    df = df.replace(np.nan, 'NA', regex=True)
+    #print(df.replace(r'^\s*$', np.nan, regex=True))
     res_df = df
-    res_df = res_df.replace(r'^\s*$', np.NaN, regex=True)
+    #res_df = res_df.replace(r'^\s*$', np.NaN, regex=True)
     #res_df = res_df.replace('', np.nan, regex=True)
-
-    res_df.dropna(how='all', inplace = True)
     #res_df = df.dropna(axis = 0 , how = 'all')
     #res_df.dropna(axis = 0 , how = 'all')
     #dropna(self, axis=0, how="any", thresh=None, subset=None, inplace=False)
@@ -111,7 +113,7 @@ def get_stumpy_query_pattern_filling_time_relevant_kpis(df,Q_df):
     Q_res_df.dropna(how='all', inplace = True)
     #Q_res_df = Q_res_df.replace(np.nan, 'NA', regex=True)
 
-    res_df.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique2/' + 'FillingTime_RKPIs_Data_' + '_' + datetime.now().strftime(
+    df.to_csv('DataAnalysis/MotifDataAnalysis/PatternTechnique2/' + 'FillingTime_RKPIs_Data_' + '_' + datetime.now().strftime(
                 "%Y%m%d-%H%M%S") + '.csv',index=False, header=True)
 
 def get_stumpy_query_pattern(df,Q_df):
