@@ -8,11 +8,13 @@ import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 from datetime import datetime
+from datetime import date, timedelta
+
 
 def analysis_to_file(res_df,mp_ids):
     string_ints = [str(int) for int in mp_ids]
     str_of_mpids = "_".join(string_ints)
-    res_df.to_csv('DataAnalysis/DataAnalysis/'+ data_analysis.Filename_Analysis.value + '_mpid_' + str_of_mpids + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv', index = False, header=True)
+    res_df.to_csv('DataAnalysis/DataAnalysis/'+ 'mpid_' + str_of_mpids + data_analysis.Filename_Analysis.value +  '_createdon_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.csv', index = False, header=True)
 
 def threshold_diff(df,mpid):
     for threshold in data_analysis.thresholds.value:
@@ -71,25 +73,52 @@ def get_mp_data_data_analysis(start_period, end_period, mp_ids, level, include_m
     res_df = res_df.fillna(method='ffill')
     res_df.dropna(inplace=True)
 
-    plot_data_analysis_graphs(res_df)
+    #plot_data_analysis_graphs(res_df)
 
-    for i in range(1,len(res_df.columns)-1):
-        res_df['diff_FlowValve008_1492 - ' + str(res_df.columns[i + 1])] = res_df[res_df.columns[1]] - res_df[res_df.columns[i + 1]]
+    #for i in range(1,len(res_df.columns)-1):
+    #    res_df['diff_FlowValve008_1492 - ' + str(res_df.columns[i + 1])] = res_df[res_df.columns[1]] - res_df[res_df.columns[i + 1]]
 
 
     analysis_to_file(res_df,mp_ids)
 
-    threshold_diff(res_df,mp_ids)
+    #threshold_diff(res_df,mp_ids)
 
+def get_dates(sdate,edate):
+    thisdict = {}
+    x = sdate.split('-')
+    y = edate.split('-')
+    start_date = date(int(x[2]), int(x[0]), int(x[1]))
+    #start_date = date(2020, 5, 31)
+    end_date = date(int(y[2]), int(y[0]), int(y[1]))
+    delta = timedelta(days=15)
+    while start_date <= end_date:
+        sd = start_date.strftime("%m-%d-%YT00:00:00")
+        ed_tmp = start_date + delta
+        ed = ed_tmp.strftime("%m-%d-%YT00:00:00")
+        temp = start_date
+        if ed_tmp >= end_date:
+            sd = temp.strftime("%m-%d-%YT00:00:00")
+            ed = end_date.strftime("%m-%d-%YT00:00:00")
+            thisdict[sd] = ed
+            print("last startdate:", sd)
+            print("last enddate:", ed)
+            break;
+        thisdict[sd] = ed
+        start_date += delta
+
+    dataframe = pd.DataFrame(list(thisdict.items()), columns=['start_date', 'end_date'])
+
+    return dataframe
 
 def execute_data_analysis(mpid_var, start_period, end_period,granularity_level):
    get_mp_data_data_analysis(start_period, end_period, mpid_var, granularity_level)
 
 
-instance = data_analysis.instance.value
+#instance = data_analysis.instance.value
 config_oauth(config.get_current_config())
 
 try:
+    df_fetched_dates = get_dates(data_analysis.start_period.value, data_analysis.end_period.value)
     execute_data_analysis(data_analysis.measuringpoint_var.value, data_analysis.start_period.value, data_analysis.end_period.value,data_analysis.granularity.value)
     print("\nend of program successful with file saved to DataAnalysis and Graphs folders, inside project folder:services")
     exit()
