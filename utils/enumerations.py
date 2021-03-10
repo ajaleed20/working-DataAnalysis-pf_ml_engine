@@ -68,7 +68,7 @@ class GanualityLevel(enum.Enum):
 class data_analysis(enum.Enum):
     # For Patterns.py Implementation
     stumpy_measuringpoint_var = [660,1637,1958,13749,1797,557,567]
-    Q_stumpy_measuringpoint_var = [557]
+    Q_stumpy_measuringpoint_var = [1637]
     # For DataAnalysis.py Implementation
     measuringpoint_var = [1492, 1491, 1493]
 
@@ -77,7 +77,7 @@ class data_analysis(enum.Enum):
     end_period =   '11-30-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     Filename_Analysis = 'DataAnalysis'
     Filename_Threshold = 'Data_Above_Threshold'
-    thresholds = [300, 200, 100]
+    thresholds = [20,16,4,2200,120,20]
     if len(stumpy_measuringpoint_var) >1 :
         FillingTime = True
     else:
@@ -87,7 +87,7 @@ class data_analysis(enum.Enum):
     #Q_start_period = '11-09-2020T14:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     #Q_end_period = '11-09-2020T14:30:00'  # 'mm-dd-yyyyTHH:MM:SS'
 
-    Q_start_period = '11-10-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    Q_start_period = '11-09-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     Q_end_period   = '11-11-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     #
     # Q_start_period = '11-09-2020T22:50:00'  # 'mm-dd-yyyyTHH:MM:SS'

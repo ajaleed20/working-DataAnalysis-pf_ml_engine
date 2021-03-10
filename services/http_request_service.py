@@ -6,7 +6,6 @@ from utils.oauth import get_access_token
 
 def get(service, controller, action, params):
     current_configs = config.get_current_config()
-
     base_url = current_configs.REMOTE_SERVICES[service]
     base_url += controller
     base_url += '/' + action
