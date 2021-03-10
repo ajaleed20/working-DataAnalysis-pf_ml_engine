@@ -355,7 +355,6 @@ def get_stumpy_query_pattern(df,Q_df):
                 "%Y%m%d-%H%M%S") + '.png')
 
 def get_mp_data_data_analysis(start_period, end_period, Q_start_period, Q_end_period, mp_ids, Q_mp_ids,level, include_missing_mp= False):
-
     if (data_analysis.FillingTime.value):
         dfs, missing_mp_ids = data_service.get_data_by_ids_period_and_level_for_filling_time_relevant_kpis(start_period,end_period, mp_ids,level, include_missing_mp)
         Q_dfs, Q_missing_mp_ids = data_service.get_data_by_ids_period_and_level_for_filling_time_relevant_kpis(Q_start_period, Q_end_period, Q_mp_ids,level, include_missing_mp)
