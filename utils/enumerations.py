@@ -75,21 +75,24 @@ class data_analysis(enum.Enum):
     # If possible
     # for all available times, but at least from 31.05.2020 till 20.02.2021.
     #############################################################################################
-    measuringpoint_var = [660]
+    measuringpoint_var = []
+    start_range = 1790
+    end_range   = 1800
     start_period = '05-31-2020'#T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     end_period = '02-20-2021'#T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     granularity = 1
     instance = 'hbc'
-    # for rplc in (("-", ""), (":", "")):
-    #     sp = start_period.replace(*rplc)
-    # for rpl in (("-", ""), (":", "")):
-    #     ep = end_period.replace(*rpl)
-    sp = start_period.replace('-', '')
-    ep = end_period.replace('-', '')
-    s = sp.replace(':', '')
-    e = ep.replace(':', '')
-    Filename_Analysis = '_from_' + s + '_till_' + e
     iteration_num = 2
+    # # for rplc in (("-", ""), (":", "")):
+    # #     sp = start_period.replace(*rplc)
+    # # for rpl in (("-", ""), (":", "")):
+    # #     ep = end_period.replace(*rpl)
+    # sp = start_period.replace('-', '')
+    # ep = end_period.replace('-', '')
+    # s = sp.replace(':', '')
+    # e = ep.replace(':', '')
+    # Filename_Analysis = '_from_' + s + '_till_' + e
+
 
     #
     #

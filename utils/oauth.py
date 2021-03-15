@@ -19,7 +19,6 @@ def config_oauth(configurations):
     try:
         client = OAuth2Session(configs.IS_CLIENT_ID, configs.IS_CLIENT_SECRET, scope='idmgr permissions')
         token = client.fetch_token(configs.IS_ACCESS_TOKEN_URL, grant_type='client_credentials')
-        print(token)
     except Exception as e:
         _logger.error(e)
         raise

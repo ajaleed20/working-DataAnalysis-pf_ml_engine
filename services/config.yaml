@@ -1,0 +1,3 @@
+azure_storage_connectionstring: ""
+csv_container_name: "csv"
+source_folder: "/Users/ajaleed/Desktop/upload_csv"
