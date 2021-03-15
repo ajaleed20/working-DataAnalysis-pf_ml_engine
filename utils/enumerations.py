@@ -75,6 +75,7 @@ class data_analysis(enum.Enum):
     # If possible
     # for all available times, but at least from 31.05.2020 till 20.02.2021.
     #############################################################################################
+
     measuringpoint_var = []
     start_range = 1790
     end_range   = 1800
@@ -82,67 +83,3 @@ class data_analysis(enum.Enum):
     end_period = '02-20-2021'#T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
     granularity = 1
     instance = 'hbc'
-    iteration_num = 2
-    # # for rplc in (("-", ""), (":", "")):
-    # #     sp = start_period.replace(*rplc)
-    # # for rpl in (("-", ""), (":", "")):
-    # #     ep = end_period.replace(*rpl)
-    # sp = start_period.replace('-', '')
-    # ep = end_period.replace('-', '')
-    # s = sp.replace(':', '')
-    # e = ep.replace(':', '')
-    # Filename_Analysis = '_from_' + s + '_till_' + e
-
-
-    #
-    #
-    # # For Patterns.py Implementation
-    # stumpy_measuringpoint_var = [660,1637,1958,13749,1797,557,567]
-    # Q_stumpy_measuringpoint_var = [1637]
-    # # For DataAnalysis.py Implementation
-    # measuringpoint_var = [1492, 1491, 1493]
-    #
-    # #
-    # start_period = '11-01-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # end_period =   '11-30-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # Filename_Analysis = 'DataAnalysis'
-    # Filename_Threshold = 'Data_Above_Threshold'
-    # thresholds = [20,16,4,2200,120,20]
-    # if len(stumpy_measuringpoint_var) >1 :
-    #     FillingTime = True
-    # else:
-    #     FillingTime = False
-
-    #For pattern_technique2.py with Query pattern Technique
-    #Q_start_period = '11-09-2020T14:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    #Q_end_period = '11-09-2020T14:30:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # Q_start_period = '11-09-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # Q_end_period   = '11-11-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-
-
-    #
-    # original faluty time period for flowvalve008
-    # Q_start_period = '11-09-2020T22:50:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # Q_end_period = '11-09-2020T23:30:00'  # 'mm-dd-yyyyTHH:MM:SS'
-
-
-    # For pattern_technique3.py with AB JOIN Technique
-    # A_stumpy_measuringpoint_var = [1637]
-    # B_stumpy_measuringpoint_var = [1637]
-    # A_start_period = '11-09-2020T22:50:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # A_end_period = '11-09-2020T23:30:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # B_start_period = '11-08-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # B_end_period = '11-11-2020T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-
-    # General purpose variables for all implementations
-    # granularity = 2
-    # instance = 'hbc'
-    # iteration_num = 2
-
-
-    # input_mpid = [1492, 1491, 1493]
-    # target_mpid = [1492]
-    # A_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # A_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # B_start_period = '11-10-2020T02:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    # B_end_period = '11-10-2020T04:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
