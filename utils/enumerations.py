@@ -78,8 +78,8 @@ class data_analysis(enum.Enum):
 
     measuringpoint_var = []
     start_range = 1790
-    end_range   = 1800
-    start_period = '05-31-2020'#T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
-    end_period = '02-20-2021'#T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    end_range   = 1950
     granularity = 1
     instance = 'hbc'
+    start_period = '05-31-2020'#T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
+    end_period = '02-20-2021'#T00:00:00'  # 'mm-dd-yyyyTHH:MM:SS'
